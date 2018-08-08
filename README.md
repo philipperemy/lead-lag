@@ -12,3 +12,15 @@ unknown parameter ϑ ∈ R, given randomly sampled non-synchronous data from (Xt
 By applying a certain contrast optimization based on a modified version of the Hayashi–Yoshida
 covariation estimator, we obtain a consistent estimator of the lead-lag parameter, together with
 an explicit rate of convergence governed by the sparsity of the sampling design.
+
+## Numerical Illustration on Simulated Data
+
+### Non synchronous data
+
+We simulate a lead-lag Bachelier model without drift with:
+- N = 10,000 (grid on which we sample random arriving times for both X and Y).
+- #I = 500
+- #J = 3,000
+- ρ = 0.80, x0 = 1.0, y0 = 2.1, s1 = 1.0, s2 = 1.5
+- lead_lag = 200 (X is the leader, Y the lagger)
+- finite grid Gn = [0, 400]
