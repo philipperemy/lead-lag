@@ -24,3 +24,16 @@ We simulate a lead-lag Bachelier model without drift with:
 - ρ = 0.80, x0 = 1.0, y0 = 2.1, s1 = 1.0, s2 = 1.5
 - lead_lag = 200 (X is the leader, Y the lagger)
 - finite grid Gn = [0, 400]
+
+We show a realization of the process (Xt, Yt) and its corresponding Constrast vs Lag plot:
+
+<p align="center">
+  <img src="figures/Figure_1.png" width="500">
+</p>
+
+
+<p align="center">
+  <img src="figures/Figure_2.png" width="500">
+</p>
+
+Clearly, the argmax of the constrast is located around the correct value (lead_lag = 200). We also observe some persistence in the constrast (I may have forgotten an extra term in the modified HY estimator). Even though X has a sampling rate 7x lower than Y, the estimator can still pick up the correct value.
