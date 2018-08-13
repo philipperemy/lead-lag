@@ -78,7 +78,7 @@ def run():
     gn_max = lead_lag * 2
     contrasts = np.zeros(gn_max)
     print('Now computing the contrasts... Be patient. It might take up to one hour.')
-    for lead_lag_candidate in np.arange(0, gn_max, 1):
+    for lead_lag_candidate in np.arange(-gn_max, gn_max, 1):
         v = np.abs(shifted_modified_hy_estimator(x, y, t_x, t_y, lead_lag_candidate, normalize=True))
         print(lead_lag_candidate, v)
         contrasts[lead_lag_candidate] = v
