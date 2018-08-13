@@ -36,7 +36,13 @@ We show a realization of the process (Xt, Yt) and its corresponding Constrast vs
   <img src="figures/Figure_2.png" width="500">
 </p>
 
-Clearly, the argmax of the constrast is located around the correct value (lead_lag = 200). We also observe some persistence in the constrast (I may have forgotten an extra term in the modified HY estimator). Even though X has a sampling rate 7x lower than Y, the estimator can still pick up the correct value.
+Clearly, the argmax of the constrast is located around the correct value (lead_lag = 200). We also observe some persistence in the constrast (I may have forgotten an extra term in the modified HY estimator). Even though X has a sampling rate 7x lower than Y, the estimator can still pick up the correct value. We can also normalize the contrast to have an unbiased estimation of the cross correlation function rho for different lags. In theory this function should be a Dirac centered around the lead_lag parameter with ρ(lead_lag) = 0.8 and 0 elsewhere.
+
+<p align="center">
+  <img src="figures/Figure_3.png" width="470">
+</p>
+
+With normalization, we expect the contrast to 
 
 ## References
 - [High-Frequency Covariance Estimates With Noisy and Asynchronous Financial Data](https://www.princeton.edu/~yacine/QMLE2D.pdf)
