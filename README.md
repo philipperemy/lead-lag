@@ -42,8 +42,6 @@ Clearly, the argmax of the constrast is located around the correct value (lead_l
   <img src="figures/Figure_3.png" width="470">
 </p>
 
-With normalization, we expect the contrast to 
-
 ## References
 - [High-Frequency Covariance Estimates With Noisy and Asynchronous Financial Data](https://www.princeton.edu/~yacine/QMLE2D.pdf)
 - [On covariance estimation of non-synchronously observed diffusion](http://www.ms.u-tokyo.ac.jp/~nakahiro/mypapers_for_personal_use/hayyos03.pdf)
