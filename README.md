@@ -13,9 +13,9 @@ By applying a certain contrast optimization based on a modified version of the H
 covariation estimator, we obtain a consistent estimator of the lead-lag parameter, together with
 an explicit rate of convergence governed by the sparsity of the sampling design.
 
-## Numerical Illustration on Simulated Data
+## Numerical Illustrations
 
-### Non synchronous data
+### Non synchronous data (generated from the Brownian Bachelier model)
 
 We simulate a lead-lag Bachelier model without drift with:
 - N = 10,000 (grid on which we sample random arriving times for both X and Y).
@@ -47,6 +47,15 @@ We can also look at negative lags and define the LLR (standing for Lead/Lag Rati
 <p align="center">
   <img src="figures/Figure_4.png" width="450">
 </p>
+
+### Non synchronous data (Bitcoin markets)
+
+We now consider a real world use case where we have two Japanese bitcoin exchanges: bitflyer and btcbox. The former has higher liquidity hence we expect it to lead the latter. If we plot the prices of BTC/JPY for both exchanges for a specifid day, we get:
+
+<p align="center">
+  <img src="figures/Figure_5.png" width="500">
+</p>
+
 
 ## References
 - [High-Frequency Covariance Estimates With Noisy and Asynchronous Financial Data](https://www.princeton.edu/~yacine/QMLE2D.pdf)
