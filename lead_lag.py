@@ -1,5 +1,7 @@
 import numpy as np
 
+from fast_contrast import CrossCorrelationHY
+
 
 def sample_from_bachelier(rho=0.8, n=1000, lag=200):
     x0, y0 = 1.0, 2.1
@@ -47,7 +49,7 @@ def shifted_modified_hy_estimator(x, y, t_x, t_y, k, normalize=False):  # contra
             overlap_term = overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0
             hy_cov += increments_mul * overlap_term
     hy_cov /= (norm_x * norm_y)
-    return hy_cov
+    return np.abs(hy_cov)
 
 
 def synthetic_data():
@@ -79,7 +81,7 @@ def synthetic_data():
 
 def run():
     # ===== DATA PART =====
-    use_synthetic_data = False
+    use_synthetic_data = True
 
     if use_synthetic_data:
         print('Using synthetic data (Bachelier).')
@@ -93,12 +95,9 @@ def run():
     # ===== DATA PART =====
 
     gn_max = lead_lag * 2
-    contrasts = np.zeros(gn_max)
     print('Now computing the contrasts... The complexity is O(N^2). So be (very) patient..')
-    for lead_lag_candidate in np.arange(-gn_max, gn_max, 1):
-        v = np.abs(shifted_modified_hy_estimator(x, y, t_x, t_y, lead_lag_candidate, normalize=True))
-        print(lead_lag_candidate, v)
-        contrasts[lead_lag_candidate] = v
+    lag_range = np.arange(-gn_max, gn_max, 1)
+    contrasts = CrossCorrelationHY(x, y, t_x, t_y, lag_range, normalize=True).fast_inference()
 
     import matplotlib.pyplot as plt
     plt.title('Contrast = f(Lag)')
@@ -108,8 +107,8 @@ def run():
     plt.show()
 
     # could have a better granularity.
-    est_lead_lag = np.argmax(contrasts)
-    print('Est. lead lag =', est_lead_lag)
+    est_lead_lag_index = np.argmax(contrasts)
+    print('Est. lead lag =', lag_range[est_lead_lag_index])
 
 
 if __name__ == '__main__':
