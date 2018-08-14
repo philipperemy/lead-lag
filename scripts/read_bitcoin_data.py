@@ -10,6 +10,7 @@ import pandas as pd
 
 prefix = os.path.join(os.path.dirname(__file__), '..', 'data')
 
+# http://api.bitcoincharts.com/v1/csv/ or https://github.com/philipperemy/bitcoin-market-data
 btcbox_data_raw_file = os.path.join(prefix, 'btcboxJPY.csv')
 bitflyer_data_raw_file = os.path.join(prefix, 'bitflyerJPY.csv')
 
