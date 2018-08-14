@@ -50,12 +50,19 @@ We can also look at negative lags and define the LLR (standing for Lead/Lag Rati
 
 ### Non synchronous data (Bitcoin markets)
 
-We now consider a real world use case where we have two Japanese bitcoin exchanges: bitflyer and btcbox. The former has higher liquidity hence we expect it to lead the latter. If we plot the prices of BTC/JPY for both exchanges for a specifid day, we get:
+We now consider a real world use case where we have two Japanese bitcoin exchanges: bitflyer and btcbox. The former has higher liquidity hence we expect it to lead the latter. If we plot the prices of BTC/JPY for both exchanges for a specific day, we get:
 
 <p align="center">
   <img src="figures/Figure_5.png" width="500">
 </p>
 
+So which one leads? We apply the same lead lag procedure using the constrast quantity computed on a grid `Gn = ]-40,40[` (unit is second here).
+
+<p align="center">
+  <img src="figures/Figure_6.png" width="500">
+</p>
+
+The contrast is maximized for ϑ = 15 seconds. This promptly means that bitflyer is the leader as expected and that btcbox takes on average 15 seconds to reflect any changes on its price.
 
 ## References
 - [High-Frequency Covariance Estimates With Noisy and Asynchronous Financial Data](https://www.princeton.edu/~yacine/QMLE2D.pdf)
