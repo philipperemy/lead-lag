@@ -1,5 +1,7 @@
 import numpy as np
 
+from scripts.read_data import build_dataset
+
 
 def sample_from_bachelier(rho=0.8, n=1000, lag=200):
     x0, y0 = 1.0, 2.1
@@ -50,7 +52,7 @@ def shifted_modified_hy_estimator(x, y, t_x, t_y, k, normalize=False):  # contra
     return hy_cov
 
 
-def run():
+def synthetic_data():
     n = 10_000
     # only the case where the lead lag is positive is considered here.
     # to make it negative it should be pretty straightforward.
@@ -74,6 +76,17 @@ def run():
     plt.scatter(range(true_lag, n), bb_y[true_lag:], s=0.5, color='blue')
     plt.legend(['Leader (driver)', 'Lagger (follower)'])
     plt.show()
+    return x, y, t_x, t_y, lead_lag
+
+
+def run():
+    use_synthetic_data = False
+
+    if use_synthetic_data:
+        x, y, t_x, t_y, lead_lag = synthetic_data()
+    else:
+        x, y, t_x, t_y = build_dataset()
+        lead_lag = 20
 
     gn_max = lead_lag * 2
     contrasts = np.zeros(gn_max)
@@ -83,6 +96,7 @@ def run():
         print(lead_lag_candidate, v)
         contrasts[lead_lag_candidate] = v
 
+    import matplotlib.pyplot as plt
     plt.title('Contrast = f(Lag)')
     plt.ylabel('Contrast')
     plt.xlabel('Lag')
