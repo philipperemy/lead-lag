@@ -1,7 +1,5 @@
 import numpy as np
 
-from scripts.read_data import build_dataset
-
 
 def sample_from_bachelier(rho=0.8, n=1000, lag=200):
     x0, y0 = 1.0, 2.1
@@ -80,17 +78,23 @@ def synthetic_data():
 
 
 def run():
+    # ===== DATA PART =====
     use_synthetic_data = False
 
     if use_synthetic_data:
+        print('Using synthetic data (Bachelier).')
         x, y, t_x, t_y, lead_lag = synthetic_data()
     else:
-        x, y, t_x, t_y = build_dataset()
+        print('Using bitcoin data.')
+        from scripts.read_bitcoin_data import bitcoin_data
+        x, y, t_x, t_y = bitcoin_data()
+        # in that case we don't know the lead lag so we can just set a big value here.
         lead_lag = 20
+    # ===== DATA PART =====
 
     gn_max = lead_lag * 2
     contrasts = np.zeros(gn_max)
-    print('Now computing the contrasts... Be patient. It might take up to one hour.')
+    print('Now computing the contrasts... The complexity is O(N^2). So be (very) patient..')
     for lead_lag_candidate in np.arange(-gn_max, gn_max, 1):
         v = np.abs(shifted_modified_hy_estimator(x, y, t_x, t_y, lead_lag_candidate, normalize=True))
         print(lead_lag_candidate, v)
