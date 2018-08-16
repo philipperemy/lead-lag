@@ -5,7 +5,7 @@ Used for Cython. This file will be converted to C code.
 http://cython.org/
 """
 
-def overlap(min1, max1, min2, max2):
+def overlap(long min1, long max1, long min2, long max2):
     return max(0, min(max1, max2) - max(min1, min2))
 
 
