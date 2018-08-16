@@ -5,6 +5,7 @@ __pycache__/
 .idea/
 .DS_Store
 *.html
+*.c
 
 *.csv
 *.tsv
