@@ -5,7 +5,7 @@ from contrast import CrossCorrelationHY
 
 def run():
     # ===== DATA PART =====
-    use_synthetic_data = False
+    use_synthetic_data = True
 
     if use_synthetic_data:
         print('Using synthetic data (Bachelier).')
