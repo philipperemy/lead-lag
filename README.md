@@ -64,6 +64,18 @@ So which one leads? We apply the same lead lag procedure using the constrast qua
 
 The contrast is maximized for ϑ = 15 seconds. This promptly means that bitflyer is the leader as expected and that btcbox takes on average 15 seconds to reflect any changes on its price.
 
+### Get started
+
+```
+virtualenv -p python3.6 venv3.6
+source venv3.6/bin/activate
+pip install numpy
+python main.py # slow implementation without C extension
+make clean
+make
+python main.py # With C support: should be faster! (~25x faster).
+```
+
 ## References
 - [High-Frequency Covariance Estimates With Noisy and Asynchronous Financial Data](https://www.princeton.edu/~yacine/QMLE2D.pdf)
 - [On covariance estimation of non-synchronously observed diffusion](http://www.ms.u-tokyo.ac.jp/~nakahiro/mypapers_for_personal_use/hayyos03.pdf)
