@@ -69,7 +69,7 @@ The contrast is maximized for ϑ = 15 seconds. This promptly means that bitflyer
 ```
 virtualenv -p python3.6 venv3.6
 source venv3.6/bin/activate
-pip install numpy
+pip install numpy matplotlib Cython
 python main.py # slow implementation without C extension
 make clean
 make
