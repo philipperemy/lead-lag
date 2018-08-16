@@ -1,26 +1,6 @@
 import numpy as np
 
-
-def sample_from_bachelier(rho=0.8, n=1000, lag=200):
-    x0, y0 = 1.0, 2.1
-    s1, s2 = 1.0, 1.5
-
-    dt = 0.1
-    x = x0
-    y = y0
-    x_t = np.zeros(shape=n)
-    y_t = np.zeros(shape=n)
-    for k in range(n):
-        b1 = np.random.normal(loc=0.0, scale=s1 ** 2 * dt)
-        b2 = rho * b1 + np.sqrt(1 - rho ** 2) * np.random.normal(loc=0.0, scale=dt)
-        x += b1
-        y += b2
-        x_t[k] = x
-        y_t[k] = y
-
-    y_t = np.roll(y_t, shift=lag)
-
-    return x_t, y_t, lag
+from cpython_contrast import CrossCorrelationHY
 
 
 def overlap(min1, max1, min2, max2):
@@ -47,43 +27,17 @@ def shifted_modified_hy_estimator(x, y, t_x, t_y, k, normalize=False):  # contra
             overlap_term = overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0
             hy_cov += increments_mul * overlap_term
     hy_cov /= (norm_x * norm_y)
-    return hy_cov
-
-
-def synthetic_data():
-    n = 10_000
-    # only the case where the lead lag is positive is considered here.
-    # to make it negative it should be pretty straightforward.
-    lead_lag = 200
-    np.random.seed(129)
-    x, y, true_lag = sample_from_bachelier(rho=0.8, n=n, lag=lead_lag)
-    t_x = sorted(np.random.choice(range(n), size=500, replace=False))
-    t_y = sorted(np.random.choice(range(n), size=3_000, replace=False))
-
-    # just for plotting purposes.
-    bb_x = np.zeros(shape=n) * np.nan
-    for t in t_x:
-        bb_x[t] = x[t]
-    bb_y = np.zeros(shape=n) * np.nan
-    for t in t_y:
-        bb_y[t] = y[t]
-
-    import matplotlib.pyplot as plt
-    plt.title('Non-synchronous data with leader / lagger relationship')
-    plt.scatter(range(true_lag, n), bb_x[true_lag:], s=0.5, color='lime')
-    plt.scatter(range(true_lag, n), bb_y[true_lag:], s=0.5, color='blue')
-    plt.legend(['Leader (driver)', 'Lagger (follower)'])
-    plt.show()
-    return x, y, t_x, t_y, lead_lag
+    return np.abs(hy_cov)
 
 
 def run():
     # ===== DATA PART =====
-    use_synthetic_data = False
+    use_synthetic_data = True
 
     if use_synthetic_data:
         print('Using synthetic data (Bachelier).')
-        x, y, t_x, t_y, lead_lag = synthetic_data()
+        from scripts.read_bachelier_data import bachelier_data
+        x, y, t_x, t_y, lead_lag = bachelier_data()
     else:
         print('Using bitcoin data.')
         from scripts.read_bitcoin_data import bitcoin_data
@@ -92,24 +46,32 @@ def run():
         lead_lag = 20
     # ===== DATA PART =====
 
+    # ===== TEST PART =====
+    print('Starting test phase...')
+    test_lag_range = [-20, 40, 0, 10, 50, 32, 31, 83]
+    contrasts_1 = CrossCorrelationHY(x, y, t_x, t_y, test_lag_range, normalize=True).fast_inference()
+    contrasts_2 = CrossCorrelationHY(x, y, t_x, t_y, test_lag_range, normalize=True).slow_inference()
+    np.testing.assert_almost_equal(contrasts_1, contrasts_2)
+    print('Test phase completed [success]...')
+    # ===== TEST PART =====
+
+    # ===== COMPUTATION ====
     gn_max = lead_lag * 2
-    contrasts = np.zeros(gn_max)
     print('Now computing the contrasts... The complexity is O(N^2). So be (very) patient..')
-    for lead_lag_candidate in np.arange(-gn_max, gn_max, 1):
-        v = np.abs(shifted_modified_hy_estimator(x, y, t_x, t_y, lead_lag_candidate, normalize=True))
-        print(lead_lag_candidate, v)
-        contrasts[lead_lag_candidate] = v
+    lag_range = np.arange(-gn_max, gn_max, 1)
+    contrasts = CrossCorrelationHY(x, y, t_x, t_y, lag_range, normalize=True).fast_inference()
 
     import matplotlib.pyplot as plt
     plt.title('Contrast = f(Lag)')
     plt.ylabel('Contrast')
     plt.xlabel('Lag')
-    plt.scatter(range(len(contrasts)), contrasts, s=10)
+    plt.scatter(lag_range, contrasts, s=10)
     plt.show()
 
     # could have a better granularity.
-    est_lead_lag = np.argmax(contrasts)
-    print('Est. lead lag =', est_lead_lag)
+    est_lead_lag_index = np.argmax(contrasts)
+    print('Est. lead lag =', lag_range[est_lead_lag_index])
+    # ===== COMPUTATION ====
 
 
 if __name__ == '__main__':
