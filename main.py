@@ -38,7 +38,7 @@ def run():
     plt.title('Contrast = f(Lag)')
     plt.ylabel('Contrast')
     plt.xlabel('Lag')
-    plt.scatter(lag_range, contrasts, s=10)
+    plt.plot(lag_range, contrasts, s=10)
     plt.show()
 
     # could have a better granularity.
