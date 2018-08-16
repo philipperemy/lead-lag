@@ -1,5 +1,5 @@
 from time import time
-
+import numpy as np
 from os import cpu_count
 
 
@@ -16,10 +16,10 @@ def parallel_function(f, sequence, num_threads=None):
 class CrossCorrelationHY:
 
     def __init__(self, x, y, t_x, t_y, lag_range, normalize):
-        self.x = x
-        self.y = y
-        self.t_x = t_x
-        self.t_y = t_y
+        self.x = np.array(x)
+        self.y = np.array(y)
+        self.t_x = np.array(t_x)
+        self.t_y = np.array(t_y)
         self.lag_range = lag_range
         self.normalize = normalize
 
