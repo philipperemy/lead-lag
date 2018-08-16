@@ -29,6 +29,7 @@ class CrossCorrelationHY:
         return contrast
 
     def slow_inference(self):
+        print('Using slow_inference().')
         contrasts = []
         for k in self.lag_range:
             contrasts.append(self.call(k))
