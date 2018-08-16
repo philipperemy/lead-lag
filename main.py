@@ -1,11 +1,11 @@
 import numpy as np
 
-from cpython_contrast import CrossCorrelationHY
+from contrast import CrossCorrelationHY
 
 
 def run():
     # ===== DATA PART =====
-    use_synthetic_data = True
+    use_synthetic_data = False
 
     if use_synthetic_data:
         print('Using synthetic data (Bachelier).')

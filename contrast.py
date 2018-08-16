@@ -1,4 +1,5 @@
 from time import time
+
 import numpy as np
 from os import cpu_count
 
@@ -15,7 +16,7 @@ def parallel_function(f, sequence, num_threads=None):
 
 class CrossCorrelationHY:
 
-    def __init__(self, x, y, t_x, t_y, lag_range, normalize):
+    def __init__(self, x, y, t_x, t_y, lag_range, normalize=True):
         self.x = np.array(x)
         self.y = np.array(y)
         self.t_x = np.array(t_x)
@@ -23,13 +24,11 @@ class CrossCorrelationHY:
         self.lag_range = lag_range
         self.normalize = normalize
 
-    def fast_inference(self):
-        print('Using fast_inference().')
-        contrast = parallel_function(self.call, self.lag_range, num_threads=int(cpu_count() // 2))
+    def fast_inference(self, num_threads=int(cpu_count() // 2)):
+        contrast = parallel_function(self.call, self.lag_range, num_threads=num_threads)
         return contrast
 
     def slow_inference(self):
-        print('Using slow_inference().')
         contrasts = []
         for k in self.lag_range:
             contrasts.append(self.call(k))
