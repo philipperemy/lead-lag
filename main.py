@@ -16,8 +16,15 @@ def run():
         from scripts.read_bitcoin_data import bitcoin_data
         x, y, t_x, t_y = bitcoin_data()
         # in that case we don't know the lead lag so we can just set a big value here.
-        lead_lag = 20
+        lead_lag = 100
     # ===== DATA PART =====
+
+    import matplotlib.pyplot as plt
+    plt.title('Non-synchronous data with leader / lagger relationship')
+    plt.scatter(range(len(x)), x, s=0.5, color='lime')
+    plt.scatter(range(len(x)), y, s=0.5, color='blue')
+    plt.legend(['Bitstamp', 'WEX'])
+    plt.show()
 
     # ===== TEST PART =====
     print('Starting test phase...')
@@ -29,10 +36,13 @@ def run():
     # ===== TEST PART =====
 
     # ===== COMPUTATION ====
-    gn_max = lead_lag * 2
+    gn_max = lead_lag * 10
     print('Now computing the contrasts... The complexity is O(N^2). So be (very) patient..')
-    lag_range = np.arange(-gn_max, gn_max, 1)
+    lag_range = np.arange(-gn_max, gn_max, 1) * 5
     contrasts = CrossCorrelationHY(x, y, t_x, t_y, lag_range, normalize=True).fast_inference()
+
+    for lag, contrast in zip(lag_range, contrasts):
+        print(lag, contrast)
 
     import matplotlib.pyplot as plt
     plt.title('Contrast = f(Lag)')
