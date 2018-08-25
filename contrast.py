@@ -1,7 +1,9 @@
 from time import time
 
 import numpy as np
-from os import cpu_count
+import os
+import pandas as pd
+from glob import glob
 
 
 def parallel_function(f, sequence, num_threads=None):
@@ -23,8 +25,11 @@ class CrossCorrelationHY:
         self.t_y = np.array(t_y)
         self.lag_range = lag_range
         self.normalize = normalize
+        if len(glob('lead_lag*.so')) == 0:
+            print('The library has not been compiled. It will run much slower.')
+            print('Run: make.')
 
-    def fast_inference(self, num_threads=int(cpu_count() // 2)):
+    def fast_inference(self, num_threads=int(os.cpu_count() // 2)):
         contrast = parallel_function(self.call, self.lag_range, num_threads=num_threads)
         return contrast
 
@@ -40,5 +45,9 @@ class CrossCorrelationHY:
         value = shifted_modified_hy_estimator(self.x, self.y, self.t_x, self.t_y, k, self.normalize)
         end_time = time()
         print(f'Estimation of the cross correlation for lag [{k}] '
-              f'completed and took {end_time-start_time:.2f} seconds.')
+              f'has completed and it took {end_time-start_time:.2f} seconds.')
         return value
+
+    def write_results_to_file(self, filename, contrasts):
+        out = pd.DataFrame(data=np.transpose([self.lag_range, contrasts]), columns=['LagRange', 'Contrast'])
+        out.to_csv(path_or_buf=filename, index=False)

@@ -8,9 +8,9 @@ import numpy as np
 import os
 import pandas as pd
 
-EXCHANGE_1 = 'bitstamp'
-EXCHANGE_2 = 'wex'
-CURRENCY = 'USD'
+EXCHANGE_1 = 'bitflyer'
+EXCHANGE_2 = 'btcbox'
+CURRENCY = 'JPY'
 
 prefix = os.path.join(os.path.dirname(__file__), '..', 'data')
 
