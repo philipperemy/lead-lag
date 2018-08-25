@@ -19,7 +19,7 @@ def run():
     # plt.show()
 
     # ===== COMPUTATION ====
-    max_lead_lag = 40  # in seconds.
+    max_lead_lag = 160  # in seconds.
     lag_range = np.arange(-max_lead_lag, max_lead_lag, 1)
     cc = CrossCorrelationHY(x, y, t_x, t_y, lag_range, normalize=True)
     contrasts = cc.fast_inference()
