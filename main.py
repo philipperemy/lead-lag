@@ -3,11 +3,11 @@ import numpy as np
 from contrast import CrossCorrelationHY
 
 
-def run():
+def run_inference(data_file_1, data_file_2):
     # ===== DATA PART =====
     print('Using bitcoin data.')
     from scripts.read_bitcoin_data import bitcoin_data
-    x, y, t_x, t_y = bitcoin_data()
+    x, y, t_x, t_y = bitcoin_data(data_file_1, data_file_2)
     # in that case we don't know the lead lag so we can just set a big value here.
     # ===== DATA PART =====
 
@@ -19,7 +19,7 @@ def run():
     # plt.show()
 
     # ===== COMPUTATION ====
-    max_lead_lag = 160  # in seconds.
+    max_lead_lag = 40  # in seconds.
     lag_range = np.arange(-max_lead_lag, max_lead_lag, 1)
     cc = CrossCorrelationHY(x, y, t_x, t_y, lag_range, normalize=True)
     contrasts = cc.fast_inference()
@@ -42,4 +42,4 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    run_inference('data/bitflyerJPY.csv.small', 'data/btcboxJPY.csv.small')
