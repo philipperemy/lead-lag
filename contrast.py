@@ -18,13 +18,14 @@ def parallel_function(f, sequence, num_threads=None):
 
 class CrossCorrelationHY:
 
-    def __init__(self, x, y, t_x, t_y, lag_range, normalize=True):
+    def __init__(self, x, y, t_x, t_y, lag_range, normalize=True, verbose_mode=True):
         self.x = np.array(x)
         self.y = np.array(y)
         self.t_x = np.array(t_x)
         self.t_y = np.array(t_y)
         self.lag_range = lag_range
         self.normalize = normalize
+        self.verbose_mode = verbose_mode
         if len(glob('lead_lag*.so')) == 0:
             print('The library has not been compiled. It will run much slower.')
             print('Run: make.')
@@ -44,8 +45,9 @@ class CrossCorrelationHY:
         start_time = time()
         value = shifted_modified_hy_estimator(self.x, self.y, self.t_x, self.t_y, k, self.normalize)
         end_time = time()
-        print(f'Estimation of the cross correlation for lag [{k}] '
-              f'has completed and it took {end_time-start_time:.2f} seconds.')
+        if self.verbose_mode:
+            print(f'Estimation of the cross correlation for lag [{k}] '
+                  f'has completed and it took {end_time-start_time:.2f} seconds.')
         return value
 
     def write_results_to_file(self, filename, contrasts):
