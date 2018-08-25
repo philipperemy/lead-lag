@@ -1,9 +1,10 @@
 import numpy as np
+import os
 
 from contrast import CrossCorrelationHY
 
 
-def run_inference(data_file_1, data_file_2):
+def run_inference(data_file_1, data_file_2, output_filename='out.csv'):
     # ===== DATA PART =====
     print('Using bitcoin data.')
     from scripts.read_bitcoin_data import bitcoin_data
@@ -23,7 +24,7 @@ def run_inference(data_file_1, data_file_2):
     lag_range = np.arange(-max_lead_lag, max_lead_lag, 1)
     cc = CrossCorrelationHY(x, y, t_x, t_y, lag_range, normalize=True)
     contrasts = cc.fast_inference()
-    cc.write_results_to_file('out.csv', contrasts)
+    cc.write_results_to_file(output_filename, contrasts)
 
     # for lag, contrast in zip(lag_range, contrasts):
     #     print(lag, contrast)
@@ -41,5 +42,26 @@ def run_inference(data_file_1, data_file_2):
     # ===== COMPUTATION ====
 
 
+def run_inference_for_all_files():
+    from glob import glob
+    from scripts.read_bitcoin_data import EXCHANGE_1, EXCHANGE_2, CURRENCY
+    all_files = glob('data2/**_small.csv', recursive=True)
+    file_listing_dict = {}
+    for filename in all_files:
+        exchange, date, _ = os.path.splitext(os.path.basename(filename))[0].split('_')
+
+        if date not in file_listing_dict:
+            file_listing_dict[date] = {}
+
+        if exchange not in file_listing_dict[date]:
+            file_listing_dict[date][exchange] = filename
+
+    for date, data in file_listing_dict.items():
+        data_filename_1 = data[EXCHANGE_1 + CURRENCY]
+        data_filename_2 = data[EXCHANGE_2 + CURRENCY]
+        run_inference(data_filename_1, data_filename_2, f'contrasts_{EXCHANGE_1}_{EXCHANGE_2}_{date}.csv')
+
+
 if __name__ == '__main__':
     run_inference('data/bitflyerJPY.csv.small', 'data/btcboxJPY.csv.small')
+    # run_inference_for_all_files()
