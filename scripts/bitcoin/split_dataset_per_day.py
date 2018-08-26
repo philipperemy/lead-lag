@@ -39,7 +39,7 @@ def main():
     import sys
 
     if len(sys.argv) != 3:
-        print('Specify a processed CSV filename from the convert_bitcoinchart_file.py script and an output folder.')
+        print('Specify a processed CSV filename from the convert_bitcoincharts_file.py script and an output folder.')
         exit(1)
     input_filename = sys.argv[1]
     output_dir = sys.argv[2]
