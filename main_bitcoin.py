@@ -47,7 +47,7 @@ def run_inference(data_file_1, data_file_2, output_filename='out.csv', verbose_m
     # ===== COMPUTATION ====
 
 
-def run_inference_for_all_files(processed_data_dir='/tmp/bitcoin/'):
+def run_inference_for_all_files(processed_data_dir='/tmp/bitcoin/', output_dir='out'):
     from glob import glob
     all_files = glob(f'{processed_data_dir}/**_small.csv', recursive=True)
     file_listing_dict = {}
@@ -71,6 +71,9 @@ def run_inference_for_all_files(processed_data_dir='/tmp/bitcoin/'):
 
     # pprint(file_listing_dict, indent=4)
 
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
     verbose_mode = False
     with tqdm(file_listing_dict.items()) as bar:
         for date, data in bar:
@@ -78,7 +81,7 @@ def run_inference_for_all_files(processed_data_dir='/tmp/bitcoin/'):
             ex2 = exchanges[1]
             data_filename_1 = data[ex1]
             data_filename_2 = data[ex2]
-            output_filename = f'contrasts_{ex1}_related_to_{ex2}_{date}.csv'
+            output_filename = os.path.join(output_dir, f'contrasts_{ex1}_related_to_{ex2}_{date}.csv')
             bar.set_description(f'Working on {output_filename}')
             run_inference(data_filename_1, data_filename_2, output_filename, verbose_mode)
 
@@ -86,11 +89,12 @@ def run_inference_for_all_files(processed_data_dir='/tmp/bitcoin/'):
 def main():
     import sys
 
-    if len(sys.argv) != 2:
-        print('Specify a processed data directory containing CSV files of bitcoin exchanges.')
+    if len(sys.argv) != 3:
+        print('Specify a processed data directory containing CSV files of bitcoin exchanges and an output directory.')
         exit(1)
     processed_data_dir = sys.argv[1]
-    run_inference_for_all_files(processed_data_dir)
+    output_dir = sys.argv[2]
+    run_inference_for_all_files(processed_data_dir, output_dir)
 
 
 if __name__ == '__main__':
