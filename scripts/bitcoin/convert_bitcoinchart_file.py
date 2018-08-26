@@ -10,9 +10,6 @@ def process_bitcoincharts_data(input_filename, output_filename):
     def unix_to_datetime(d):
         return datetime.datetime.fromtimestamp(d)
 
-    def to_days(df):
-        return [g[1] for g in df.groupby([df.index.year, df.index.month, df.index.day])]  # DataFrame to List<Day>
-
     if not os.path.isfile(input_filename):
         print('Could not find the CSV file with raw data. '
               'Browse http://api.bitcoincharts.com/v1/csv/ and '
@@ -28,6 +25,7 @@ def process_bitcoincharts_data(input_filename, output_filename):
     d = d[(d['last'] - d['last'].shift(1)) != 0]
     d.drop(labels=['date', 'volume', 'timestamp'], axis=1, inplace=True)
     d.to_csv(output_filename, index=True)
+    print(f'Wrote to {output_filename}.')
     # d_days = to_days(d)
     # for d_day in d_days:
     #     date = str(d_day.index[0]).split(' ')[0]
@@ -44,11 +42,11 @@ def process_bitcoincharts_data(input_filename, output_filename):
 def main():
     import sys
 
-    if len(sys.argv) != 2:
-        print('Specify a CSV file from http://api.bitcoincharts.com/v1/csv/.')
+    if len(sys.argv) != 3:
+        print('Specify a CSV file from http://api.bitcoincharts.com/v1/csv/ and an output filename.')
         exit(1)
     input_filename = sys.argv[1]
-    output_filename = input_filename + '.processed'
+    output_filename = sys.argv[2]
     process_bitcoincharts_data(input_filename=input_filename,
                                output_filename=output_filename)
 

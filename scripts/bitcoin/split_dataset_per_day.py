@@ -6,13 +6,9 @@ def split_dataset_per_day(input_filename, output_dir):
 
     import os
     import pandas as pd
-    import shutil
 
-    try:
-        shutil.rmtree(output_dir)
-    except:
-        pass
-    os.makedirs(output_dir)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
     def to_days(df):
         return [g[1] for g in df.groupby([df.index.year, df.index.month, df.index.day])]  # DataFrame to List<Day>

@@ -31,6 +31,7 @@ class CrossCorrelationHY:
             print('Run: make.')
 
     def fast_inference(self, num_threads=int(os.cpu_count() // 2)):
+        print(f'Running fast_inference() on {list(self.lag_range)} with {num_threads} threads.')
         contrast = parallel_function(self.call, self.lag_range, num_threads=num_threads)
         return contrast
 

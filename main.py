@@ -1,3 +1,8 @@
+import warnings
+
+warnings.filterwarnings('ignore', message='numpy.dtype size changed')
+warnings.filterwarnings('ignore', message='numpy.ufunc size changed')
+
 import numpy as np
 import os
 from tqdm import tqdm
@@ -7,7 +12,6 @@ from contrast import CrossCorrelationHY
 
 def run_inference(data_file_1, data_file_2, output_filename='out.csv', verbose_mode=True):
     # ===== DATA PART =====
-    print('Using bitcoin data.')
     from scripts.read_bitcoin_data import bitcoin_data
     x, y, t_x, t_y = bitcoin_data(data_file_1, data_file_2)
     # in that case we don't know the lead lag so we can just set a big value here.
@@ -22,7 +26,7 @@ def run_inference(data_file_1, data_file_2, output_filename='out.csv', verbose_m
 
     # ===== COMPUTATION ====
     max_lead_lag = 40  # in seconds.
-    lag_range = np.arange(-max_lead_lag, max_lead_lag, 1)
+    lag_range = np.arange(-max_lead_lag, max_lead_lag + 1, 1)
     cc = CrossCorrelationHY(x, y, t_x, t_y, lag_range, normalize=True, verbose_mode=verbose_mode)
     contrasts = cc.fast_inference()
     cc.write_results_to_file(output_filename, contrasts)
@@ -43,11 +47,11 @@ def run_inference(data_file_1, data_file_2, output_filename='out.csv', verbose_m
     # ===== COMPUTATION ====
 
 
-def run_inference_for_all_files():
+def run_inference_for_all_files(processed_data_dir='/tmp/bitcoin/'):
     from glob import glob
-    from scripts.read_bitcoin_data import EXCHANGE_1, EXCHANGE_2, CURRENCY
-    all_files = glob('data2/**_small.csv', recursive=True)
+    all_files = glob(f'{processed_data_dir}/**_small.csv', recursive=True)
     file_listing_dict = {}
+    exchanges = set()
     for filename in all_files:
         exchange, date, _ = os.path.splitext(os.path.basename(filename))[0].split('_')
 
@@ -57,16 +61,37 @@ def run_inference_for_all_files():
         if exchange not in file_listing_dict[date]:
             file_listing_dict[date][exchange] = filename
 
+        exchanges.add(exchange)
+
+    exchanges = sorted(exchanges)
+    assert len(exchanges) == 2, 'We need exactly two exchanges.'
+
+    # dates intersection between those two datasets.
+    file_listing_dict = {k: v for k, v in file_listing_dict.items() if len(v) == 2}
+
+    # pprint(file_listing_dict, indent=4)
+
     verbose_mode = False
     with tqdm(file_listing_dict.items()) as bar:
         for date, data in bar:
-            data_filename_1 = data[EXCHANGE_1 + CURRENCY]
-            data_filename_2 = data[EXCHANGE_2 + CURRENCY]
-            output_filename = f'contrasts_{EXCHANGE_1}_{EXCHANGE_2}_{date}.csv'
+            ex1 = exchanges[0]
+            ex2 = exchanges[1]
+            data_filename_1 = data[ex1]
+            data_filename_2 = data[ex2]
+            output_filename = f'contrasts_{ex1}_related_to_{ex2}_{date}.csv'
             bar.set_description(f'Working on {output_filename}')
             run_inference(data_filename_1, data_filename_2, output_filename, verbose_mode)
 
 
+def main():
+    import sys
+
+    if len(sys.argv) != 2:
+        print('Specify a processed data directory containing CSV files of bitcoin exchanges.')
+        exit(1)
+    processed_data_dir = sys.argv[1]
+    run_inference_for_all_files(processed_data_dir)
+
+
 if __name__ == '__main__':
-    # run_inference('data/bitflyerJPY.csv.small', 'data/btcboxJPY.csv.small')
-    run_inference_for_all_files()
+    main()
