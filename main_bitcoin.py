@@ -25,7 +25,7 @@ def run_inference(data_file_1, data_file_2, output_filename='out.csv', verbose_m
     # plt.show()
 
     # ===== COMPUTATION ====
-    max_lead_lag = 40  # in seconds.
+    max_lead_lag = 60  # in seconds.
     lag_range = np.arange(-max_lead_lag, max_lead_lag + 1, 1)
     cc = CrossCorrelationHY(x, y, t_x, t_y, lag_range, normalize=True, verbose_mode=verbose_mode)
     contrasts = cc.fast_inference()
@@ -74,9 +74,11 @@ def run_inference_for_all_files(processed_data_dir='/tmp/bitcoin/', output_dir='
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    verbose_mode = False
+    verbose_mode = True
     with tqdm(file_listing_dict.items()) as bar:
         for date, data in bar:
+            # if date != '2017-12-21':
+            #     continue
             ex1 = exchanges[0]
             ex2 = exchanges[1]
             data_filename_1 = data[ex1]

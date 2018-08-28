@@ -41,10 +41,10 @@ def bachelier_data():
     for t in t_y:
         bb_y[t] = y[t]
 
-    import matplotlib.pyplot as plt
-    plt.title('Non-synchronous data with leader / lagger relationship')
-    plt.scatter(range(true_lag, n), bb_x[true_lag:], s=0.5, color='lime')
-    plt.scatter(range(true_lag, n), bb_y[true_lag:], s=0.5, color='blue')
-    plt.legend(['Leader (driver)', 'Lagger (follower)'])
-    plt.show()
+    # import matplotlib.pyplot as plt
+    # plt.title('Non-synchronous data with leader / lagger relationship')
+    # plt.scatter(range(true_lag, n), bb_x[true_lag:], s=0.5, color='lime')
+    # plt.scatter(range(true_lag, n), bb_y[true_lag:], s=0.5, color='blue')
+    # plt.legend(['Leader (driver)', 'Lagger (follower)'])
+    # plt.show()
     return x, y, t_x, t_y, lead_lag
