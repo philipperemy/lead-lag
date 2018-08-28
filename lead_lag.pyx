@@ -1,5 +1,7 @@
 cimport cython
 import numpy as np
+import random
+from bisect import bisect_left
 
 """
 Used for Cython. This file will be converted to C code.
@@ -8,8 +10,6 @@ http://cython.org/
 
 cdef extern from "math.h":
     double sqrt(double m)
-
-
 
 cdef inline overlap(long min1, long max1, long min2, long max2):
     return max(0, min(max1, max2) - max(min1, min2)) > 0
@@ -56,13 +56,45 @@ def shifted_modified_hy_estimator(double[:] x, double[:] y,
         norm_x = 1.0
         norm_y = 1.0
 
-    for i in range(len(t_x) - 1):
-        for j in range(len(t_y) - 1):
-            jj_0 = t_y[j]
-            jj_1 = t_y[j+1]
-            ii_0 = t_x[i]
-            ii_1 = t_x[i+1]
-            hy_cov += (x[ii_1] - x[ii_0]) * (y[jj_1] - y[jj_0]) * overlap(ii_0, ii_1, jj_0 - k, jj_1 - k)
+
+    jjs = list(zip(t_y, t_y[1:]))
+    jjs_indexes = list(range(len(jjs)))
+    random.shuffle(jjs_indexes)
+    for ii in zip(t_x, t_x[1:]):
+
+        mid_point_copy = bisect_left(np.clip(np.array(t_y) - k, np.min(t_y), np.max(t_y)), ii[0])
+        if mid_point_copy is not None:
+            selected_jjs = []
+            mid_point = mid_point_copy
+            while True:
+                if mid_point + 1 > len(t_y) - 1:
+                    break
+                jj = (t_y[mid_point], t_y[mid_point + 1])
+                if overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0:
+                    selected_jjs.append([jj[0], jj[1]])
+                    mid_point += 1
+                else:
+                    break
+
+            # go right
+            mid_point = mid_point_copy - 1
+            while True:
+                if mid_point + 1 > len(t_y) - 1:
+                    break
+                jj = (t_y[mid_point], t_y[mid_point + 1])
+                if overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0:
+                    selected_jjs.append([jj[0], jj[1]])
+                    mid_point -= 1
+                else:
+                    break
+
+        else:
+            selected_jjs = jjs
+
+        for jj in selected_jjs:
+            increments_mul = (x[ii[1]] - x[ii[0]]) * (y[jj[1]] - y[jj[0]])
+            overlap_term = overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0 # just in case.
+            hy_cov += increments_mul * overlap_term
 
     hy_cov /= (norm_x * norm_y)
     return np.abs(hy_cov)

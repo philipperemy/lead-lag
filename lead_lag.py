@@ -29,7 +29,6 @@ def take_closest(myList, myNumber):
 
 
 def shifted_modified_hy_estimator(x, y, t_x, t_y, k, normalize=False):  # contrast function
-    # print('shifted_modified_hy_estimator opt3')
     hy_cov = 0.0
     if normalize:
         norm_x = 0.0
@@ -44,28 +43,20 @@ def shifted_modified_hy_estimator(x, y, t_x, t_y, k, normalize=False):  # contra
         norm_x = 1.0
         norm_y = 1.0
 
-    import random
-    jjs = list(zip(t_y, t_y[1:]))
-    jjs_indexes = list(range(len(jjs)))
-    random.shuffle(jjs_indexes)
-    for ii in zip(t_x, t_x[1:]):
+    clipped_t_y_minus_k = np.clip(t_y - k, np.min(t_y), np.max(t_y))
 
-        mid_point_copy = take_closest(np.clip(t_y - k, np.min(t_y), np.max(t_y)), ii[0])
-        # for jj_index in jjs_indexes:
-        #     jj = list(jjs[jj_index])
-        #     if overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0:
-        #         mid_point_copy = jj_index
-        #         break
-
+    # Complexity: O(n log n)
+    for ii in zip(t_x, t_x[1:]):  # O(n)
+        mid_point_copy = take_closest(clipped_t_y_minus_k, ii[0])  # O(log n)
         if mid_point_copy is not None:
-            hola = []
+            selected_jjs = []
             mid_point = mid_point_copy
             while True:
                 if mid_point + 1 > len(t_y) - 1:
                     break
                 jj = (t_y[mid_point], t_y[mid_point + 1])
                 if overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0:
-                    hola.append([jj[0], jj[1]])
+                    selected_jjs.append([jj[0], jj[1]])
                     mid_point += 1
                 else:
                     break
@@ -77,17 +68,15 @@ def shifted_modified_hy_estimator(x, y, t_x, t_y, k, normalize=False):  # contra
                     break
                 jj = (t_y[mid_point], t_y[mid_point + 1])
                 if overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0:
-                    hola.append([jj[0], jj[1]])
+                    selected_jjs.append([jj[0], jj[1]])
                     mid_point -= 1
                 else:
                     break
 
-            # if len(hola) > 0:
-            #     print(ii)
         else:
-            hola = jjs
+            selected_jjs = list(zip(t_y, t_y[1:]))
 
-        for jj in hola:
+        for jj in selected_jjs:
             increments_mul = (x[ii[1]] - x[ii[0]]) * (y[jj[1]] - y[jj[0]])
             overlap_term = overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0
             hy_cov += increments_mul * overlap_term
@@ -245,32 +234,32 @@ def shifted_modified_hy_estimator(x, y, t_x, t_y, k, normalize=False):  # contra
 #     return np.abs(hy_cov)
 
 
-def shifted_modified_hy_estimator_opt1(x, y, t_x, t_y, k, normalize=False):  # contrast function
-    print('Optimisation 1.')
-    hy_cov = 0.0
-    if normalize:
-        norm_x = 0.0
-        for ii in zip(t_x, t_x[1:]):
-            norm_x += (x[ii[1]] - x[ii[0]]) ** 2
-        norm_x = np.sqrt(norm_x)
-        norm_y = 0.0
-        for jj in zip(t_y, t_y[1:]):
-            norm_y += (y[jj[1]] - y[jj[0]]) ** 2
-        norm_y = np.sqrt(norm_y)
-    else:
-        norm_x = 1.0
-        norm_y = 1.0
-    for ii in zip(t_x, t_x[1:]):
-        last_overlap_term = 0
-        for jj in zip(t_y, t_y[1:]):
-            increments_mul = (x[ii[1]] - x[ii[0]]) * (y[jj[1]] - y[jj[0]])
-            overlap_term = overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0
-            if overlap_term == 0 and last_overlap_term != 0:
-                break
-            last_overlap_term = overlap_term
-            hy_cov += increments_mul * overlap_term
-    hy_cov /= (norm_x * norm_y)
-    return np.abs(hy_cov)
+# def shifted_modified_hy_estimator_opt1(x, y, t_x, t_y, k, normalize=False):  # contrast function
+#     print('Optimisation 1.')
+#     hy_cov = 0.0
+#     if normalize:
+#         norm_x = 0.0
+#         for ii in zip(t_x, t_x[1:]):
+#             norm_x += (x[ii[1]] - x[ii[0]]) ** 2
+#         norm_x = np.sqrt(norm_x)
+#         norm_y = 0.0
+#         for jj in zip(t_y, t_y[1:]):
+#             norm_y += (y[jj[1]] - y[jj[0]]) ** 2
+#         norm_y = np.sqrt(norm_y)
+#     else:
+#         norm_x = 1.0
+#         norm_y = 1.0
+#     for ii in zip(t_x, t_x[1:]):
+#         last_overlap_term = 0
+#         for jj in zip(t_y, t_y[1:]):
+#             increments_mul = (x[ii[1]] - x[ii[0]]) * (y[jj[1]] - y[jj[0]])
+#             overlap_term = overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0
+#             if overlap_term == 0 and last_overlap_term != 0:
+#                 break
+#             last_overlap_term = overlap_term
+#             hy_cov += increments_mul * overlap_term
+#     hy_cov /= (norm_x * norm_y)
+#     return np.abs(hy_cov)
 
 
 if __name__ == '__main__':
