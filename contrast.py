@@ -43,7 +43,7 @@ class CrossCorrelationHY:
             print('The library has not been compiled. It will run much slower.')
             print('Run: make.')
 
-    def fast_inference(self, num_threads=int(os.cpu_count() // 2)):
+    def fast_inference(self, num_threads=int(os.cpu_count())):
         print(f'Running fast_inference() on {list(self.lag_range)} with {num_threads} threads.')
         contrast = parallel_function(self.call, self.lag_range, num_threads=num_threads)
         return contrast

@@ -52,7 +52,7 @@ def run_inference_for_all_files(processed_data_dir='/tmp/bitcoin/', output_dir='
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    verbose_mode = True
+    verbose_mode = False
     sorted_dates = sorted(file_listing_dict)
 
     # TODO: cut the first 50. Remove it
