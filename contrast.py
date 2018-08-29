@@ -39,9 +39,9 @@ class CrossCorrelationHY:
         self.lag_range = lag_range
         self.normalize = normalize
         self.verbose_mode = verbose_mode
-        if len(glob('lead_lag*.so')) == 0:
-            print('The library has not been compiled. It will run much slower.')
-            print('Run: make.')
+        # if len(glob('lead_lag*.so')) == 0:
+        #     print('The library has not been compiled. It will run much slower.')
+        #     print('Run: make.')
 
     def fast_inference(self, num_threads=int(os.cpu_count())):
         print(f'Running fast_inference() on {list(self.lag_range)} with {num_threads} threads.')
