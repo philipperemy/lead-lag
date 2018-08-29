@@ -1,6 +1,5 @@
 cimport cython
 import numpy as np
-import random
 from bisect import bisect_left
 
 """
@@ -57,12 +56,10 @@ def shifted_modified_hy_estimator(double[:] x, double[:] y,
         norm_y = 1.0
 
 
-    jjs = list(zip(t_y, t_y[1:]))
-    jjs_indexes = list(range(len(jjs)))
-    random.shuffle(jjs_indexes)
-    for ii in zip(t_x, t_x[1:]):
-
-        mid_point_copy = bisect_left(np.clip(np.array(t_y) - k, np.min(t_y), np.max(t_y)), ii[0])
+    clipped_t_y_minus_k = np.clip(np.array(t_y) - k, np.min(t_y), np.max(t_y))
+    # Complexity: O(n log n)
+    for ii in zip(t_x, t_x[1:]):  # O(n)
+        mid_point_copy = bisect_left(clipped_t_y_minus_k, ii[0])  # O(log n)
         if mid_point_copy is not None:
             selected_jjs = []
             mid_point = mid_point_copy
@@ -89,11 +86,11 @@ def shifted_modified_hy_estimator(double[:] x, double[:] y,
                     break
 
         else:
-            selected_jjs = jjs
+            selected_jjs = list(zip(t_y, t_y[1:]))
 
         for jj in selected_jjs:
             increments_mul = (x[ii[1]] - x[ii[0]]) * (y[jj[1]] - y[jj[0]])
-            overlap_term = overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0 # just in case.
+            overlap_term = overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0
             hy_cov += increments_mul * overlap_term
 
     hy_cov /= (norm_x * norm_y)

@@ -6,6 +6,19 @@ import pandas as pd
 from glob import glob
 
 
+# def parallel_function(f, sequence, num_threads=None):
+#     with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
+#         future_outputs_dict = {}
+#         futures = {executor.submit(f, k): k for k in sequence}
+#         for future in concurrent.futures.as_completed(futures):
+#             future_outputs_dict[future] = future.result()
+#
+#     outputs = []
+#     for future in futures:
+#         outputs.append(future_outputs_dict[future])
+#
+#     return outputs
+
 def parallel_function(f, sequence, num_threads=None):
     from multiprocessing import Pool
     pool = Pool(processes=num_threads)
@@ -36,9 +49,15 @@ class CrossCorrelationHY:
         return contrast
 
     def slow_inference(self):
+        e0 = self.lag_range[0]
+        e1 = self.lag_range[-1]
+        print(f'Running slow_inference() on ({e0}:{e1}) with 1 thread.')
         contrasts = []
         for k in self.lag_range:
-            contrasts.append(self.call(k))
+            value = self.call(k)
+            if np.isnan(value):
+                print(f'NAN VALUE DETECTED FOR {k}.')
+            contrasts.append(value)
         return contrasts
 
     def call(self, k):

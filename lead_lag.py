@@ -1,4 +1,5 @@
 import numpy as np
+from bisect import bisect_left
 
 
 def overlap(min1, max1, min2, max2):
@@ -9,26 +10,8 @@ def overlap_1d(x):
     return max(0, min(x[1], x[3]) - max(x[0], x[2]))
 
 
-from bisect import bisect_left
-
-
-def take_closest(myList, myNumber):
-    pos = bisect_left(myList, myNumber)
-    if pos == 0:
-        return myList[0]
-    if pos == len(myList):
-        return myList[-1]
-    before = myList[pos - 1]
-    after = myList[pos]
-    # print(pos)
-    return pos
-    # if after - myNumber < myNumber - before:
-    #     return after
-    # else:
-    #     return before
-
-
 def shifted_modified_hy_estimator(x, y, t_x, t_y, k, normalize=False):  # contrast function
+    # print('Common Python.')
     hy_cov = 0.0
     if normalize:
         norm_x = 0.0
@@ -47,7 +30,7 @@ def shifted_modified_hy_estimator(x, y, t_x, t_y, k, normalize=False):  # contra
 
     # Complexity: O(n log n)
     for ii in zip(t_x, t_x[1:]):  # O(n)
-        mid_point_copy = take_closest(clipped_t_y_minus_k, ii[0])  # O(log n)
+        mid_point_copy = bisect_left(clipped_t_y_minus_k, ii[0])  # O(log n)
         if mid_point_copy is not None:
             selected_jjs = []
             mid_point = mid_point_copy
