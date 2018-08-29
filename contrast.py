@@ -2,6 +2,7 @@ from time import time
 
 import numpy as np
 import os
+import pandas as pd
 
 
 # def parallel_function(f, sequence, num_threads=None):
@@ -68,3 +69,6 @@ class CrossCorrelationHY:
                   f'has completed and it took {end_time-start_time:.2f} seconds.')
         return value
 
+    def write_results_to_file(self, filename, contrasts):
+        out = pd.DataFrame(data=np.transpose([self.lag_range, contrasts]), columns=['LagRange', 'Contrast'])
+        out.to_csv(path_or_buf=filename, index=False)
