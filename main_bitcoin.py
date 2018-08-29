@@ -55,8 +55,7 @@ def run_inference_for_all_files(processed_data_dir='/tmp/bitcoin/', output_dir='
     verbose_mode = False
     sorted_dates = sorted(file_listing_dict)
 
-    # TODO: cut the first 50. Remove it
-    sorted_dates = sorted_dates[0:50]
+    # sorted_dates = sorted_dates[0:50]
 
     with tqdm(sorted_dates) as bar:
         for date in bar:
