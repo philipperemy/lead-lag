@@ -2,8 +2,6 @@ from time import time
 
 import numpy as np
 import os
-import pandas as pd
-from glob import glob
 
 
 # def parallel_function(f, sequence, num_threads=None):
@@ -61,7 +59,7 @@ class CrossCorrelationHY:
         return contrasts
 
     def call(self, k):
-        from lead_lag import shifted_modified_hy_estimator
+        from lead_lag_impl import shifted_modified_hy_estimator
         start_time = time()
         value = shifted_modified_hy_estimator(self.x, self.y, self.t_x, self.t_y, k, self.normalize)
         end_time = time()
@@ -70,6 +68,3 @@ class CrossCorrelationHY:
                   f'has completed and it took {end_time-start_time:.2f} seconds.')
         return value
 
-    def write_results_to_file(self, filename, contrasts):
-        out = pd.DataFrame(data=np.transpose([self.lag_range, contrasts]), columns=['LagRange', 'Contrast'])
-        out.to_csv(path_or_buf=filename, index=False)
