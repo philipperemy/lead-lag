@@ -32,7 +32,6 @@ python scripts/bitcoin/split_dataset_per_day.py ${TMP_DIR}/${FILE_2}.processed $
 
 
 make clean
-rm -rf *.so
 
 # 0 => single thread.
 # 1 => use all the physical cores of the machine.
