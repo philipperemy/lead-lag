@@ -13,7 +13,26 @@ By applying a certain contrast optimization based on a modified version of the H
 covariation estimator, we obtain a consistent estimator of the lead-lag parameter, together with
 an explicit rate of convergence governed by the sparsity of the sampling design.
 
-## Numerical Illustrations
+### Get started
+
+```
+virtualenv -p python3.6 venv3.6
+source venv3.6/bin/activate
+pip install jupyter-notebook # if you want to use the Jupyter Notebooks.
+make
+```
+
+Then you can run one of those Jupyter Notebooks:
+
+- [lead_lag_example_1.ipynb](https://github.com/philipperemy/lead-lag/blob/master/lead_lag_example_1.ipynb)
+- [lead_lag_example_2.ipynb](https://github.com/philipperemy/lead-lag/blob/master/lead_lag_example_2.ipynb)
+
+```
+jupyter notebook lead_lag_example_1.ipynb
+jupyter notebook lead_lag_example_2.ipynb
+```
+
+## Numerical Illustrations (cf. Jupyter Notebook files)
 
 ### Non synchronous data (generated from the Brownian Bachelier model)
 
@@ -63,19 +82,6 @@ So which one leads? We apply the same lead lag procedure using the constrast qua
 </p>
 
 The contrast is maximized for ϑ = 15 seconds. This promptly means that bitflyer is the leader as expected and that btcbox takes on average 15 seconds to reflect any changes on its price.
-
-### Get started
-
-```
-virtualenv -p python3.6 venv3.6
-source venv3.6/bin/activate
-pip install numpy matplotlib Cython
-python main.py # slow implementation without C extension
-make clean
-make
-python main.py # With C support: should be faster! (~25x faster).
-```
-
 ## References
 - [High-Frequency Covariance Estimates With Noisy and Asynchronous Financial Data](https://www.princeton.edu/~yacine/QMLE2D.pdf)
 - [On covariance estimation of non-synchronously observed diffusion](http://www.ms.u-tokyo.ac.jp/~nakahiro/mypapers_for_personal_use/hayyos03.pdf)
