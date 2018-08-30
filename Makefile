@@ -1,4 +1,11 @@
 all:
-	python setup.py build_ext --inplace
+	make install
+
+install:
+	pip install . --upgrade
+
+uninstall:
+	pip uninstall lead-lag
+
 clean:
-	rm -rf *.out *.c *.bin *.exe *.o *.a *.so test build *.html __pycache__ out
+	rm -rf *.out *.c *.bin *.exe *.o *.a *.so build *.html __pycache__
