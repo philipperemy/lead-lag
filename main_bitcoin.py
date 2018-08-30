@@ -3,32 +3,24 @@ import warnings
 warnings.filterwarnings('ignore', message='numpy.dtype size changed')
 warnings.filterwarnings('ignore', message='numpy.ufunc size changed')
 
-import numpy as np
 import os
 from tqdm import tqdm
+from glob import glob
 
-from contrast import CrossCorrelationHY
+import lead_lag
 
 MAX_LEAD_LAG = 60
+VERBOSE = False
 
 
-def run_inference(data_file_1, data_file_2, output_filename='out.csv', verbose_mode=True, multi_threading=False):
-    from scripts.read_bitcoin_data import bitcoin_data
-    x, y, t_x, t_y = bitcoin_data(data_file_1, data_file_2)
-    max_lead_lag = MAX_LEAD_LAG  # in seconds.
-    lag_range = np.arange(-max_lead_lag, max_lead_lag + 1, 1)
-    cc = CrossCorrelationHY(x, y, t_x, t_y, lag_range, normalize=True, verbose_mode=verbose_mode)
-    if multi_threading:
-        contrasts = cc.fast_inference()
-    else:
-        contrasts = cc.slow_inference()
-    cc.write_results_to_file(output_filename, contrasts)
-    est_lead_lag_index = np.argmax(contrasts)
-    print('Est. lead lag =', lag_range[est_lead_lag_index])
+def run_inference(data_file_1, data_file_2, output_filename, verbose=True, multi_threading=False):
+    ll = lead_lag.LeadLag(data_file_1, data_file_2, MAX_LEAD_LAG, verbose)
+    ll.run_inference(multi_threading)
+    ll.write_results_to_file(output_filename)
+    print(f'Inference took {ll.inference_time:.3f} seconds.')
 
 
 def run_inference_for_all_files(processed_data_dir='/tmp/bitcoin/', output_dir='out', multi_threading=False):
-    from glob import glob
     all_files = glob(f'{processed_data_dir}/**_small.csv', recursive=True)
     file_listing_dict = {}
     exchanges = set()
@@ -52,11 +44,7 @@ def run_inference_for_all_files(processed_data_dir='/tmp/bitcoin/', output_dir='
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    verbose_mode = False
-    sorted_dates = sorted(file_listing_dict)
-
-    # sorted_dates = sorted_dates[0:50]
-
+    sorted_dates = sorted(file_listing_dict)[0:80]
     with tqdm(sorted_dates) as bar:
         for date in bar:
             data = file_listing_dict[date]
@@ -66,10 +54,7 @@ def run_inference_for_all_files(processed_data_dir='/tmp/bitcoin/', output_dir='
             data_filename_2 = data[ex2]
             output_filename = os.path.join(output_dir, f'contrasts_{ex1}_related_to_{ex2}_{date}.csv')
             bar.set_description(f'Working on {output_filename}')
-            from time import time
-            start_time = time()
-            run_inference(data_filename_1, data_filename_2, output_filename, verbose_mode, multi_threading)
-            print(f'Inference took {time()-start_time:.3f} seconds.')
+            run_inference(data_filename_1, data_filename_2, output_filename, VERBOSE, multi_threading)
 
 
 def main():
