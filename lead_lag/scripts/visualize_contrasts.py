@@ -20,8 +20,20 @@ def visualize_contrasts(results_dir):
         d = pd.read_csv(results_filename, names=['LagRange', date], index_col=0, header=None, skiprows=1)
         data.append(d)
     data = pd.concat(data, axis=1)
-    data.median(axis=1).plot_results()
-    # data.plot()
+    # data.quantile(0.95, axis=1).plot(color='red')
+    # data.quantile(0.05, axis=1).plot(color='blue')
+    # data.quantile(0.5, axis=1).plot(color='green')
+    # for col_name in list(data.columns):
+    #     data[col_name].plot()
+
+    # data.idxmax(axis=0).plot()
+    # data.idxmax(axis=0).hist(bins=50)
+
+    data.mean(axis=1).plot()
+    plt.show()
+    data.idxmax(axis=0).plot()
+    plt.show()
+    data.idxmax(axis=0).hist(bins=50)
     plt.show()
 
 
