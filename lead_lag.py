@@ -21,6 +21,8 @@ class LeadLag:
         if specific_lags is None:
             self.lag_range = np.arange(-max_absolute_lag, max_absolute_lag + 1, 1)
         else:
+            if sorted(specific_lags) != specific_lags:
+                raise Exception('Make sure the lag list passed as argument is sorted.')
             self.lag_range = np.array(specific_lags)
         self.inference_time = None
         self.cc = CrossCorrelationHY(self.x, self.y, self.t_x, self.t_y,
@@ -37,6 +39,15 @@ class LeadLag:
     @property
     def lead_lag(self):
         return self.lag_range[np.argmax(self.contrasts)] if self.contrasts else None
+
+    @property
+    def llr(self):
+        if self.contrasts is None:
+            return None
+        positive_range_indexes = self.lag_range > 0
+        negative_range_indexes = self.lag_range < 0
+        llr = np.sum(self.contrasts[positive_range_indexes]) / np.sum(self.contrasts[negative_range_indexes])
+        return llr
 
     def write_results_to_file(self, output_filename):
         self._contrasts_to_df().to_csv(path_or_buf=output_filename)

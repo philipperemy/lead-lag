@@ -45,7 +45,7 @@ class CrossCorrelationHY:
     def fast_inference(self, num_threads=int(os.cpu_count())):
         print(f'Running fast_inference() on {list(self.lag_range)} with {num_threads} threads.')
         contrast = parallel_function(self.call, self.lag_range, num_threads=num_threads)
-        return contrast
+        return np.array(contrast)
 
     def slow_inference(self):
         e0 = self.lag_range[0]
@@ -57,7 +57,7 @@ class CrossCorrelationHY:
             if np.isnan(value):
                 print(f'NAN VALUE DETECTED FOR {k}.')
             contrasts.append(value)
-        return contrasts
+        return np.array(contrasts)
 
     def call(self, k):
         from lead_lag_impl import shifted_modified_hy_estimator
