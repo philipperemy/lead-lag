@@ -14,58 +14,150 @@ def shifted_modified_hy_estimator(x, y, t_x, t_y, k, normalize=False):  # contra
     # print('Common Python.')
     hy_cov = 0.0
     if normalize:
-        norm_x = 0.0
-        for ii in zip(t_x, t_x[1:]):
-            norm_x += (x[ii[1]] - x[ii[0]]) ** 2
-        norm_x = np.sqrt(norm_x)
-        norm_y = 0.0
-        for jj in zip(t_y, t_y[1:]):
-            norm_y += (y[jj[1]] - y[jj[0]]) ** 2
-        norm_y = np.sqrt(norm_y)
+        norm_x = np.sqrt(np.sum(np.square(np.diff(x[t_x]))))
+        norm_y = np.sqrt(np.sum(np.square(np.diff(y[t_y]))))
     else:
         norm_x = 1.0
         norm_y = 1.0
 
     clipped_t_y_minus_k = np.clip(t_y - k, np.min(t_y), np.max(t_y))
-
     # Complexity: O(n log n)
     for ii in zip(t_x, t_x[1:]):  # O(n)
-        mid_point_copy = bisect_left(clipped_t_y_minus_k, ii[0])  # O(log n)
-        if mid_point_copy is not None:
-            selected_jjs = []
-            mid_point = mid_point_copy
+        ii0, ii1 = ii[0], ii[1]
+        x_inc = (x[ii1] - x[ii0])
+        mid_point_origin = bisect_left(clipped_t_y_minus_k, ii0)  # O(log n)
+        if mid_point_origin is not None:
+            mid_point = mid_point_origin
+            # go left
             while True:
                 if mid_point + 1 > len(t_y) - 1:
                     break
-                jj = (t_y[mid_point], t_y[mid_point + 1])
-                if overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0:
-                    selected_jjs.append([jj[0], jj[1]])
+                jj0, jj1 = (t_y[mid_point], t_y[mid_point + 1])
+                if overlap(ii0, ii1, jj0 - k, jj1 - k) > 0.0:
+                    hy_cov += (y[jj1] - y[jj0]) * x_inc
                     mid_point += 1
                 else:
                     break
-
             # go right
-            mid_point = mid_point_copy - 1
+            mid_point = mid_point_origin - 1
             while True:
                 if mid_point + 1 > len(t_y) - 1:
                     break
-                jj = (t_y[mid_point], t_y[mid_point + 1])
-                if overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0:
-                    selected_jjs.append([jj[0], jj[1]])
+                jj0, jj1 = (t_y[mid_point], t_y[mid_point + 1])
+                if overlap(ii0, ii1, jj0 - k, jj1 - k) > 0.0:
+                    hy_cov += (y[jj1] - y[jj0]) * x_inc
                     mid_point -= 1
                 else:
                     break
-
         else:
-            selected_jjs = list(zip(t_y, t_y[1:]))
+            raise Exception('Problem happened with bisect_left().')
 
-        for jj in selected_jjs:
-            increments_mul = (x[ii[1]] - x[ii[0]]) * (y[jj[1]] - y[jj[0]])
-            overlap_term = overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0
-            hy_cov += increments_mul * overlap_term
+    return np.abs(hy_cov) / (norm_x * norm_y)  # product of norm is positive.
 
-    hy_cov /= (norm_x * norm_y)
-    return np.abs(hy_cov)
+# def shifted_modified_hy_estimator_opt5(x, y, t_x, t_y, k, normalize=False):  # contrast function
+#     # print('Common Python.')
+#     hy_cov = 0.0
+#     if normalize:
+#         norm_x = np.sqrt(np.sum(np.square(np.diff(x[t_x]))))
+#         norm_y = np.sqrt(np.sum(np.square(np.diff(y[t_y]))))
+#     else:
+#         norm_x = 1.0
+#         norm_y = 1.0
+#
+#     clipped_t_y_minus_k = np.clip(t_y - k, np.min(t_y), np.max(t_y))
+#     # Complexity: O(n log n)
+#     for ii in zip(t_x, t_x[1:]):  # O(n)
+#         mid_point_copy = bisect_left(clipped_t_y_minus_k, ii[0])  # O(log n)
+#         if mid_point_copy is not None:
+#             selected_jjs = []
+#             mid_point = mid_point_copy
+#             # go left
+#             while True:
+#                 if mid_point + 1 > len(t_y) - 1:
+#                     break
+#                 jj = (t_y[mid_point], t_y[mid_point + 1])
+#                 if overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0:
+#                     selected_jjs.append([jj[0], jj[1]])
+#                     mid_point += 1
+#                 else:
+#                     break
+#             # go right
+#             mid_point = mid_point_copy - 1
+#             while True:
+#                 if mid_point + 1 > len(t_y) - 1:
+#                     break
+#                 jj = (t_y[mid_point], t_y[mid_point + 1])
+#                 if overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0:
+#                     selected_jjs.append([jj[0], jj[1]])
+#                     mid_point -= 1
+#                 else:
+#                     break
+#         else:
+#             raise Exception('Problem happened with bisect_left().')
+#
+#         x_inc = (x[ii[1]] - x[ii[0]])
+#         for jj in selected_jjs:
+#             # overlap_term = overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0
+#             hy_cov += x_inc * (y[jj[1]] - y[jj[0]])  # * overlap_term
+#
+#     return np.abs(hy_cov) / (norm_x * norm_y)  # product of norm is positive.
+
+# def shifted_modified_hy_estimator_opt_4(x, y, t_x, t_y, k, normalize=False):  # contrast function
+#     # print('Common Python.')
+#     hy_cov = 0.0
+#     if normalize:
+#         norm_x = 0.0
+#         for ii in zip(t_x, t_x[1:]):
+#             norm_x += (x[ii[1]] - x[ii[0]]) ** 2
+#         norm_x = np.sqrt(norm_x)
+#         norm_y = 0.0
+#         for jj in zip(t_y, t_y[1:]):
+#             norm_y += (y[jj[1]] - y[jj[0]]) ** 2
+#         norm_y = np.sqrt(norm_y)
+#     else:
+#         norm_x = 1.0
+#         norm_y = 1.0
+#
+#     clipped_t_y_minus_k = np.clip(t_y - k, np.min(t_y), np.max(t_y))
+#
+#     # Complexity: O(n log n)
+#     for ii in zip(t_x, t_x[1:]):  # O(n)
+#         mid_point_copy = bisect_left(clipped_t_y_minus_k, ii[0])  # O(log n)
+#         x_inc = (x[ii[1]] - x[ii[0]])
+#         if mid_point_copy is not None:
+#             selected_jjs = []
+#             mid_point = mid_point_copy
+#             while True:
+#                 if mid_point + 1 > len(t_y) - 1:
+#                     break
+#                 jj = (t_y[mid_point], t_y[mid_point + 1])
+#                 if overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0:
+#                     selected_jjs.append([jj[0], jj[1]])
+#                     mid_point += 1
+#                 else:
+#                     break
+#
+#             # go right
+#             mid_point = mid_point_copy - 1
+#             while True:
+#                 if mid_point + 1 > len(t_y) - 1:
+#                     break
+#                 jj = (t_y[mid_point], t_y[mid_point + 1])
+#                 if overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0:
+#                     selected_jjs.append([jj[0], jj[1]])
+#                     mid_point -= 1
+#                 else:
+#                     break
+#         else:
+#             selected_jjs = list(zip(t_y, t_y[1:]))
+#
+#         for jj in selected_jjs:
+#             increments_mul = x_inc * (y[jj[1]] - y[jj[0]])
+#             # overlap_term = overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0
+#             hy_cov += increments_mul  # * overlap_term
+#
+#     hy_cov /= (norm_x * norm_y)
+#     return np.abs(hy_cov)
 
 # def shifted_modified_hy_estimator_opt2(x, y, t_x, t_y, k, normalize=False):  # contrast function
 #     hy_cov = 0.0

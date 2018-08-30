@@ -9,7 +9,7 @@ from glob import glob
 
 import lead_lag
 
-MAX_LEAD_LAG = 60
+MAX_LEAD_LAG = 180
 VERBOSE = False
 
 
