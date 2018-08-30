@@ -1,9 +1,14 @@
+import warnings
+
+warnings.filterwarnings('ignore', message='numpy.dtype size changed')
+warnings.filterwarnings('ignore', message='numpy.ufunc size changed')
+
 from time import time
 
 import numpy as np
 import pandas as pd
 
-from contrast import CrossCorrelationHY
+from lead_lag.contrast import CrossCorrelationHY
 
 
 class LeadLag:
@@ -38,7 +43,9 @@ class LeadLag:
 
     @property
     def lead_lag(self):
-        return self.lag_range[np.argmax(self.contrasts)] if self.contrasts else None
+        if self.contrasts is None:
+            return None
+        return self.lag_range[np.argmax(self.contrasts)]
 
     @property
     def llr(self):

@@ -3,7 +3,7 @@ from time import time
 import numpy as np
 import os
 import pandas as pd
-
+from lead_lag.lead_lag_impl import shifted_modified_hy_estimator
 
 # def parallel_function(f, sequence, num_threads=None):
 #     with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
@@ -60,7 +60,6 @@ class CrossCorrelationHY:
         return np.array(contrasts)
 
     def call(self, k):
-        from lead_lag_impl import shifted_modified_hy_estimator
         start_time = time()
         value = shifted_modified_hy_estimator(self.x, self.y, self.t_x, self.t_y, k, self.normalize)
         end_time = time()

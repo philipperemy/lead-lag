@@ -67,7 +67,6 @@ def shifted_modified_hy_estimator(x, y, t_x, t_y, k, normalize=False):  # contra
     hy_cov /= (norm_x * norm_y)
     return np.abs(hy_cov)
 
-
 # def shifted_modified_hy_estimator_opt2(x, y, t_x, t_y, k, normalize=False):  # contrast function
 #     hy_cov = 0.0
 #     if normalize:
@@ -243,7 +242,3 @@ def shifted_modified_hy_estimator(x, y, t_x, t_y, k, normalize=False):  # contra
 #             hy_cov += increments_mul * overlap_term
 #     hy_cov /= (norm_x * norm_y)
 #     return np.abs(hy_cov)
-
-
-if __name__ == '__main__':
-    print(take_closest([1, 2, 4, 7, 9], 5))

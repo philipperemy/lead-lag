@@ -37,7 +37,7 @@ rm -rf *.so
 # 0 => single thread.
 # 1 => use all the physical cores of the machine.
 
-time python main_bitcoin.py ${TMP_DIR}/data-per-day ${TMP_DIR}/bitcoin_contrasts_1/ 0 >> ${TMP_DIR}/1.txt
+#time python main_bitcoin.py ${TMP_DIR}/data-per-day ${TMP_DIR}/bitcoin_contrasts_1/ 0 >> ${TMP_DIR}/1.txt
 time python main_bitcoin.py ${TMP_DIR}/data-per-day ${TMP_DIR}/bitcoin_contrasts_2/ 1 >> ${TMP_DIR}/2.txt
 
 
