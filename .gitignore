@@ -6,7 +6,7 @@ __pycache__/
 .DS_Store
 *.html
 *.c
-
+*.small
 *.csv
 *.tsv
 *.tar.gz
