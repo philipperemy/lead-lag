@@ -1,24 +1,20 @@
 import numpy as np
 
-from contrast import CrossCorrelationHY
+import lead_lag
 
 
 def run():
-    # ===== DATA PART =====
     print('Using synthetic data (Bachelier).')
     from scripts.read_bachelier_data import bachelier_data
-    x, y, t_x, t_y, true_lead_lag = bachelier_data()
-    # ===== DATA PART =====
+    x_with_ts, y_with_ts, true_lead_lag = bachelier_data()
 
-    # ===== COMPUTATION ====
-    from time import time
-    a = time()
-    for i in range(10):
-        contrasts = CrossCorrelationHY(x, y, t_x, t_y, [-200, 200, 0, 60], normalize=True).slow_inference()
-    print(time() - a)
+    ll = lead_lag.LeadLag(x_with_ts, y_with_ts, max_absolute_lag=0, verbose=True, specific_lags=[-200, 200, 0, 60])
+    ll.run_inference(multi_threading=False)
     expect = np.array([0.014287344345994381, 0.6398660339145387, 0.048185364483985596, 0.1082638625479051])
-    np.testing.assert_almost_equal(contrasts, expect, decimal=3)
-    print(contrasts)
+    np.testing.assert_almost_equal(ll.contrasts, expect, decimal=3)
+    print('PASSED.')
+    ll.plot_data()
+    ll.plot_results()
 
 
 if __name__ == '__main__':

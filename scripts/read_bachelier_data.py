@@ -33,13 +33,13 @@ def bachelier_data():
     t_x = sorted(np.random.choice(range(n), size=500, replace=False))
     t_y = sorted(np.random.choice(range(n), size=3_000, replace=False))
 
-    # just for plotting purposes.
-    bb_x = np.zeros(shape=n) * np.nan
-    for t in t_x:
-        bb_x[t] = x[t]
-    bb_y = np.zeros(shape=n) * np.nan
-    for t in t_y:
-        bb_y[t] = y[t]
+    # # just for plotting purposes.
+    # bb_x = np.zeros(shape=n) * np.nan
+    # for t in t_x:
+    #     bb_x[t] = x[t]
+    # bb_y = np.zeros(shape=n) * np.nan
+    # for t in t_y:
+    #     bb_y[t] = y[t]
 
     # import matplotlib.pyplot as plt
     # plt.title('Non-synchronous data with leader / lagger relationship')
@@ -47,4 +47,4 @@ def bachelier_data():
     # plt.scatter(range(true_lag, n), bb_y[true_lag:], s=0.5, color='blue')
     # plt.legend(['Leader (driver)', 'Lagger (follower)'])
     # plt.show()
-    return x, y, t_x, t_y, lead_lag
+    return np.transpose([t_x, x[t_x]]), np.transpose([t_y, y[t_y]]), lead_lag

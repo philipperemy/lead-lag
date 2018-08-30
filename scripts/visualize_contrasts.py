@@ -20,7 +20,7 @@ def visualize_contrasts(results_dir):
         d = pd.read_csv(results_filename, names=['LagRange', date], index_col=0, header=None, skiprows=1)
         data.append(d)
     data = pd.concat(data, axis=1)
-    data.median(axis=1).plot()
+    data.median(axis=1).plot_results()
     # data.plot()
     plt.show()
 

@@ -14,7 +14,9 @@ VERBOSE = False
 
 
 def run_inference(data_file_1, data_file_2, output_filename, verbose=True, multi_threading=False):
-    ll = lead_lag.LeadLag(data_file_1, data_file_2, MAX_LEAD_LAG, verbose)
+    from scripts.read_bitcoin_data import bitcoin_data
+    arr_1, arr_2 = bitcoin_data(data_file_1, data_file_2)
+    ll = lead_lag.LeadLag(arr_1, arr_2, MAX_LEAD_LAG, verbose)
     ll.run_inference(multi_threading)
     ll.write_results_to_file(output_filename)
     print(f'Inference took {ll.inference_time:.3f} seconds.')

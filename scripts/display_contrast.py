@@ -16,5 +16,5 @@ import matplotlib.pyplot as plt
 
 import pandas as pd
 
-pd.read_csv(filename, index_col=0).plot()
+pd.read_csv(filename, index_col=0).plot_results()
 plt.show()
