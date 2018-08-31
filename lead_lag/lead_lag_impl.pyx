@@ -37,7 +37,8 @@ def l2_norm_of_arr_diff(long[:] t_x, double[:] x):
 def shifted_modified_hy_estimator(double[:] x, double[:] y,
                                   long[:] t_x, long[:] t_y,
                                   int k, normalize=False):  # contrast function
-    cdef double hy_cov = 0.0
+    # print('Cython 1.2 v5')
+    cdef long double hy_cov = 0.0
     cdef double norm_x = 0.0
     cdef double norm_y = 0.0
     cdef double increments_mul = 0.0
@@ -55,43 +56,41 @@ def shifted_modified_hy_estimator(double[:] x, double[:] y,
         norm_x = 1.0
         norm_y = 1.0
 
-
-    clipped_t_y_minus_k = np.clip(np.array(t_y) - k, np.min(t_y), np.max(t_y))
+    clipped_t_y_minus_k = np.clip(np.array(t_y) - k, int(np.min(t_y)), int(np.max(t_y)))
     # Complexity: O(n log n)
     for ii in zip(t_x, t_x[1:]):  # O(n)
-        mid_point_copy = bisect_left(clipped_t_y_minus_k, ii[0])  # O(log n)
-        if mid_point_copy is not None:
-            selected_jjs = []
-            mid_point = mid_point_copy
+        ii0, ii1 = ii[0], ii[1]
+        x_inc = (x[ii1] - x[ii0])
+        mid_point_origin = bisect_left(clipped_t_y_minus_k, ii0)  # O(log n)
+        if mid_point_origin is not None:
+            # if mid_point_origin < 0:
+            #     mid_point_origin = 0
+            # if mid_point_origin >= len(t_y):
+            #     mid_point_origin = len(t_y) - 1
+
+            # go left
+            mid_point = mid_point_origin
             while True:
-                if mid_point + 1 > len(t_y) - 1:
+                if mid_point + 1 > len(t_y) - 1 or mid_point < 0:
                     break
-                jj = (t_y[mid_point], t_y[mid_point + 1])
-                if overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0:
-                    selected_jjs.append([jj[0], jj[1]])
+                jj0, jj1 = (t_y[mid_point], t_y[mid_point + 1])
+                if overlap(ii0, ii1, jj0 - k, jj1 - k) > 0.0:
+                    hy_cov += (y[jj1] - y[jj0]) * x_inc
                     mid_point += 1
                 else:
                     break
-
             # go right
-            mid_point = mid_point_copy - 1
+            mid_point = mid_point_origin - 1
             while True:
-                if mid_point + 1 > len(t_y) - 1:
+                if mid_point + 1 > len(t_y) - 1 or mid_point < 0:
                     break
-                jj = (t_y[mid_point], t_y[mid_point + 1])
-                if overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0:
-                    selected_jjs.append([jj[0], jj[1]])
+                jj0, jj1 = (t_y[mid_point], t_y[mid_point + 1])
+                if overlap(ii0, ii1, jj0 - k, jj1 - k) > 0.0:
+                    hy_cov += (y[jj1] - y[jj0]) * x_inc
                     mid_point -= 1
                 else:
                     break
-
         else:
-            selected_jjs = list(zip(t_y, t_y[1:]))
+            raise Exception('Problem happened with bisect_left().')
 
-        for jj in selected_jjs:
-            increments_mul = (x[ii[1]] - x[ii[0]]) * (y[jj[1]] - y[jj[0]])
-            overlap_term = overlap(ii[0], ii[1], jj[0] - k, jj[1] - k) > 0.0
-            hy_cov += increments_mul * overlap_term
-
-    hy_cov /= (norm_x * norm_y)
-    return np.abs(hy_cov)
+    return np.abs(hy_cov) / (norm_x * norm_y)  # product of norm is positive.

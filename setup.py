@@ -1,6 +1,7 @@
+from Cython.Build import cythonize
 from setuptools import setup, find_packages
 
-VERSION = '1.1'
+VERSION = '1.3'
 
 import sys
 
@@ -9,6 +10,7 @@ if sys.version_info[0] < 3:
 
 setup(name='lead-lag',
       version=VERSION,
+      ext_modules=cythonize("lead_lag/lead_lag_impl.pyx"),
       description='Lead lag estimation with a O(n log n) complexity.',
       author='Philippe Remy',
       license='Open Source',
