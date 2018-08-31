@@ -23,8 +23,8 @@ make
 
 Then you can run one of those Jupyter Notebooks:
 
-- [lead_lag_example_1.ipynb](https://github.com/philipperemy/lead-lag/blob/master/lead_lag_example_1.ipynb)
-- [lead_lag_example_2.ipynb](https://github.com/philipperemy/lead-lag/blob/master/lead_lag_example_2.ipynb)
+- [lead_lag_example_1.ipynb](notebooks/lead_lag_example_1.ipynb)
+- [lead_lag_example_2.ipynb](notebooks/lead_lag_example_2.ipynb)
 
 ```
 pip install jupyter-notebook
