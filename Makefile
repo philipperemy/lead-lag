@@ -2,6 +2,7 @@ all:
 	make install
 
 install:
+	pip install cython
 	pip install . --upgrade
 
 uninstall:
