@@ -19,6 +19,7 @@ an explicit rate of convergence governed by the sparsity of the sampling design.
 virtualenv -p python3.6 venv3.6
 source venv3.6/bin/activate
 pip install jupyter-notebook # if you want to use the Jupyter Notebooks.
+pip install cython
 make
 ```
 
