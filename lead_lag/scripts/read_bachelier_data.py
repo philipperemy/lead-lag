@@ -2,33 +2,36 @@ import numpy as np
 
 
 def sample_from_bachelier(rho=0.8, n=1000, lag=200):
+    x0, y0 = 1.0, 2.1
     s1, s2 = 1.0, 1.5
 
     dt = 0.1
+    x = x0
+    y = y0
+    x_t = np.zeros(shape=n)
+    y_t = np.zeros(shape=n)
+    for k in range(n):
+        b1 = np.random.normal(loc=0.0, scale=s1 ** 2 * dt)
+        b2 = rho * b1 + np.sqrt(1 - rho ** 2) * np.random.normal(loc=0.0, scale=dt)
+        x += b1
+        y += b2
+        x_t[k] = x
+        y_t[k] = y
 
-    b1s = np.random.normal(loc=0.0, scale=s1 ** 2 * dt, size=n)
-    b2s = rho * b1s + np.sqrt(1 - rho ** 2) * np.random.normal(loc=0.0, scale=dt, size=n)
-    b2s = np.roll(b2s, shift=lag)
-
-    x_t = np.cumsum(b1s)
-    y_t = np.cumsum(b2s)
-
-    a = np.insert(np.diff(x_t), 0, b1s[0], 0)
-    b = np.insert(np.diff(y_t), 0, b2s[0], 0)
-    np.testing.assert_almost_equal(a, b1s)
-    np.testing.assert_almost_equal(b, b2s)
-    # print(np.corrcoef(a, np.roll(b, shift=-lag)))
+    y_t = np.roll(y_t, shift=lag)
 
     return x_t, y_t, lag
 
 
-def bachelier_data(rho=0.8, lead_lag=200, n=10_000, num_s1=500, num_s2=3_000):
+def bachelier_data():
+    n = 10_000
     # only the case where the lead lag is positive is considered here.
     # to make it negative it should be pretty straightforward.
+    lead_lag = 200
     np.random.seed(129)
-    x, y, true_lag = sample_from_bachelier(rho=rho, n=n, lag=lead_lag)
-    t_x = sorted(np.random.choice(range(n), size=num_s1, replace=False))
-    t_y = sorted(np.random.choice(range(n), size=num_s2, replace=False))
+    x, y, true_lag = sample_from_bachelier(rho=0.8, n=n, lag=lead_lag)
+    t_x = sorted(np.random.choice(range(n), size=500, replace=False))
+    t_y = sorted(np.random.choice(range(n), size=3_000, replace=False))
 
     # # just for plotting purposes.
     # bb_x = np.zeros(shape=n) * np.nan
