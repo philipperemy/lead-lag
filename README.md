@@ -1,6 +1,8 @@
 # Estimation of the lead-lag from non-synchronous data
 *Implementation of the paper https://arxiv.org/pdf/1303.4871.pdf*
 
+*Complexity*: **N O(LOG N)**
+
 
 ## Abstract
 We propose a simple continuous time model for modeling the lead-lag effect between two financial
