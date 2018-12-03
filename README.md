@@ -58,6 +58,8 @@ We show a realization of the process (Xt, Yt) and its corresponding Constrast vs
   <img src="figures/Figure_2.png" width="500">
 </p>
 
+*The contrast is just a positive definitive cross correlation quantity.*
+
 Clearly, the argmax of the constrast is located around the correct value (lead_lag = 200). We also observe some persistence in the constrast (I may have forgotten an extra term in the modified HY estimator). Even though X has a sampling rate 7x lower than Y, the estimator can still pick up the correct value. We can also normalize the contrast to have an unbiased estimation of the cross correlation function rho for different lags. In theory this function should be a Dirac centered around the lead_lag parameter with ρ(lead_lag) = 0.8 and 0 elsewhere.
 
 <p align="center">
@@ -85,6 +87,11 @@ So which one leads? We apply the same lead lag procedure using the constrast qua
 </p>
 
 The contrast is maximized for ϑ = 15 seconds. This promptly means that bitflyer is the leader as expected and that btcbox takes on average 15 seconds to reflect any changes on its price.
+
+## Limitations of this current implementation
+
+- Only supports up to the second. Everything labeled in milliseconds is not correctly handled.
+
 ## References
 - [High-Frequency Covariance Estimates With Noisy and Asynchronous Financial Data](https://www.princeton.edu/~yacine/QMLE2D.pdf)
 - [On covariance estimation of non-synchronously observed diffusion](http://www.ms.u-tokyo.ac.jp/~nakahiro/mypapers_for_personal_use/hayyos03.pdf)
