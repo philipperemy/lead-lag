@@ -17,7 +17,7 @@ an explicit rate of convergence governed by the sparsity of the sampling design.
 
 ### Get started
 
-```
+```bash
 virtualenv -p python3.6 venv3.6
 source venv3.6/bin/activate
 make
@@ -28,7 +28,7 @@ Then you can run one of those Jupyter Notebooks:
 - [lead_lag_example_1.ipynb](notebooks/lead_lag_example_1.ipynb)
 - [lead_lag_example_2.ipynb](notebooks/lead_lag_example_2.ipynb)
 
-```
+```bash
 pip install jupyter-notebook
 cd notebooks
 jupyter notebook lead_lag_example_1.ipynb
