@@ -3,6 +3,8 @@
 
 *Complexity*: **N O(LOG N)**
 
+*Limitations*: Only supports up to the second. Everything labeled in milliseconds is not correctly handled (at the moment).
+
 
 ## Abstract
 We propose a simple continuous time model for modeling the lead-lag effect between two financial
