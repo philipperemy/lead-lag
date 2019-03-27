@@ -28,6 +28,11 @@ source venv3.6/bin/activate
 make
 ```
 
+A way to test that the library has been correctly installed:
+```
+cd ~ && python -c "import lead_lag; print('success')" && cd ~-
+```
+
 Then you can run one of those Jupyter Notebooks:
 
 - [lead_lag_example_1.ipynb](notebooks/lead_lag_example_1.ipynb)
