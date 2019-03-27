@@ -28,10 +28,11 @@ source venv3.6/bin/activate
 make
 ```
 
-A way to test that the library has been correctly installed:
+A way to test that the library has been correctly installed.
 ```
 cd ~ && python -c "import lead_lag; print('success')" && cd ~-
 ```
+The idea is to run the command outside of the leag_lag project to force the usage of the library and not the sources.
 
 Then you can run one of those Jupyter Notebooks:
 
