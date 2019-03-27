@@ -33,7 +33,7 @@ Then you can run one of those Jupyter Notebooks:
 - [lead_lag_example_2.ipynb](notebooks/lead_lag_example_2.ipynb)
 
 ```bash
-pip install jupyter-notebook
+pip install jupyter
 cd notebooks
 jupyter notebook lead_lag_example_1.ipynb
 jupyter notebook lead_lag_example_2.ipynb
