@@ -4,6 +4,7 @@ all:
 install:
 	pip install cython
 	pip install . --upgrade
+	python setup.py build_ext --inplace
 
 uninstall:
 	pip uninstall lead-lag

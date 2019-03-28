@@ -1,5 +1,5 @@
-from Cython.Build import cythonize
 from setuptools import setup, find_packages
+from Cython.Build import cythonize
 
 VERSION = '1.4'
 
