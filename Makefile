@@ -3,6 +3,7 @@ all:
 
 install:
 	pip install cython
+	python setup.py build_ext --inplace
 	pip install . --upgrade
 
 uninstall:
