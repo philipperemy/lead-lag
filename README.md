@@ -30,7 +30,7 @@ make
 
 A way to test that the library has been correctly installed.
 ```
-cd ~ && python -c "import lead_lag; print('success')" && cd ~-
+python -c "import lead_lag; print('success')"
 ```
 The idea is to run the command outside of the leag_lag project to force the usage of the library and not the sources.
 
