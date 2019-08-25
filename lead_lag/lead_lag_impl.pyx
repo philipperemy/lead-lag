@@ -22,6 +22,7 @@ def l2_norm_of_arr_diff(long[:] t_x, double[:] x):
     cdef long i2 = 0
     cdef double v1 = 0.0
     cdef double v2 = 0.0
+    cdef int i = 0
     for i in range(len(t_x) - 1):
         i1 = t_x[i]
         i2 = t_x[i+1]
@@ -56,6 +57,7 @@ def shifted_modified_hy_estimator(double[:] x, double[:] y,
         norm_x = 1.0
         norm_y = 1.0
 
+    cdef int ii0, ii1, jj0, jj1;
     clipped_t_y_minus_k = np.clip(np.array(t_y) - k, int(np.min(t_y)), int(np.max(t_y)))
     # Complexity: O(n log n)
     for ii in zip(t_x, t_x[1:]):  # O(n)
