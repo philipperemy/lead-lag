@@ -1,12 +1,8 @@
 def process_bitcoincharts_data(input_filename, output_filename):
-    import warnings
-
-    warnings.filterwarnings('ignore', message='numpy.dtype size changed')
-    warnings.filterwarnings('ignore', message='numpy.ufunc size changed')
-
     import datetime
     import os
     import pandas as pd
+
     def unix_to_datetime(d):
         return datetime.datetime.fromtimestamp(d)
 
