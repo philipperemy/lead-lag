@@ -35,9 +35,6 @@ assert not np.isnan(x).any()
 assert not np.isnan(y).any()
 
 
-# (x, t_x)
-# (y, t_y)
-
 class RealTimeAggregator:
 
     def __init__(self, history_length):
@@ -62,12 +59,10 @@ def main():
         if i > 1000 and i % 500 == 0:  # enough values.
             ll = LeadLag(arr_1_with_ts=y_rt.get(),
                          arr_2_with_ts=x_rt.get(),
-                         max_absolute_lag=30,  # +/- 20 seconds.
+                         max_absolute_lag=30,  # +/- @max_absolute_lag seconds.
                          verbose=False)
 
             ll.run_inference(multi_threading=False)
-            # ll.plot_data()
-            # ll.plot_results()
             print(f'i = {i}, lead_lag = {ll.lead_lag}, inference_time = {1000 * ll.inference_time:.1f} ms.')
 
 
