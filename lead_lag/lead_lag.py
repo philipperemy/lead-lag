@@ -55,7 +55,12 @@ class LeadLag:
             return None
         positive_range_indexes = self.lag_range > 0
         negative_range_indexes = self.lag_range < 0
-        llr = np.sum(self.contrasts[positive_range_indexes]) / np.sum(self.contrasts[negative_range_indexes])
+        positive_contrasts = np.sum(self.contrasts[positive_range_indexes])
+        negative_contrasts = np.sum(self.contrasts[negative_range_indexes])
+        if negative_contrasts != 0.0:
+            llr = positive_contrasts / negative_contrasts
+        else:
+            llr = np.nan
         return llr
 
     def write_results_to_file(self, output_filename):
