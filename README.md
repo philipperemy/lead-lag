@@ -21,6 +21,15 @@ an explicit rate of convergence governed by the sparsity of the sampling design.
 
 You have to install the library as a package first by running those commands:
 
+#### Method 1
+
+```bash
+pip install Cython
+pip install git+ssh://git@github.com/philipperemy/lead-lag
+```
+
+#### Method 2
+
 ```bash
 git clone git@github.com:philipperemy/lead-lag.git && cd lead-lag
 virtualenv -p python3.6 venv3.6
