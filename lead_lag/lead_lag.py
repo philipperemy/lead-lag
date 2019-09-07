@@ -45,6 +45,8 @@ class LeadLag:
     def lead_lag(self):
         if self.contrasts is None:
             return None
+        if np.std(self.contrasts) == 0.0:
+            return None
         return self.lag_range[np.argmax(self.contrasts)]
 
     @property

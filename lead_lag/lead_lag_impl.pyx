@@ -30,7 +30,7 @@ def l2_norm_of_arr_diff(long[:] t_x, double[:] x):
         v2 = x[i2]
         norm_x += (v2 - v1) ** 2
     norm_x = sqrt(norm_x)
-    return norm_x
+    return norm_x + 1e-8 # for numerical stability.
 
 
 @cython.boundscheck(False)

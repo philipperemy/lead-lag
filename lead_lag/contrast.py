@@ -1,22 +1,10 @@
+import os
 from time import time
 
 import numpy as np
-import os
 import pandas as pd
 from lead_lag.lead_lag_impl import shifted_modified_hy_estimator
 
-# def parallel_function(f, sequence, num_threads=None):
-#     with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
-#         future_outputs_dict = {}
-#         futures = {executor.submit(f, k): k for k in sequence}
-#         for future in concurrent.futures.as_completed(futures):
-#             future_outputs_dict[future] = future.result()
-#
-#     outputs = []
-#     for future in futures:
-#         outputs.append(future_outputs_dict[future])
-#
-#     return outputs
 
 def parallel_function(f, sequence, num_threads=None):
     from multiprocessing import Pool
@@ -67,7 +55,7 @@ class CrossCorrelationHY:
         end_time = time()
         if self.verbose_mode:
             print(f'Estimation of the cross correlation for lag [{k}] '
-                  f'has completed and it took {end_time-start_time:.2f} seconds.')
+                  f'has completed and it took {end_time - start_time:.2f} seconds.')
         return value
 
     def write_results_to_file(self, filename, contrasts):
