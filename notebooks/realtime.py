@@ -1,8 +1,11 @@
 from collections import deque
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 from lead_lag import LeadLag
+
+plt.ion()
 
 
 def generate_data():
@@ -34,7 +37,7 @@ def generate_data():
     y = np.concatenate((y1, y2, y3))
 
     # We want to make something asynchronous.
-    t_x = sorted(np.random.choice(range(len(t_x)), size=14000, replace=False))
+    t_x = sorted(np.random.choice(range(len(t_x)), size=8000, replace=False))
     t_y = sorted(np.random.choice(range(len(t_y)), size=8000, replace=False))
     x = x[t_x]
     y = y[t_y]
@@ -81,7 +84,13 @@ def main():
             while time_index_y < len(t_y) and t_y[time_index_y] <= t:
                 y_rt.add(value=y[time_index_y], timestamp=t_y[time_index_y])
                 time_index_y += 1
-            if t > 1000 and t % 500 == 0:  # enough values.
+
+            if t > 100:
+                plt.plot(x_rt.get()[:, 0], x_rt.get()[:, -1], 'b', linewidth=1.5)
+                plt.plot(y_rt.get()[:, 0], y_rt.get()[:, -1], 'g', linewidth=1.5)
+                plt.legend(['x', 'y'])
+                plt.pause(0.01)
+                plt.clf()
 
                 # llr > 0 means that y leads and x follows.
                 ll = LeadLag(arr_1_with_ts=y_rt.get(),
@@ -89,9 +98,16 @@ def main():
                              max_absolute_lag=30,  # +/- @max_absolute_lag seconds.
                              verbose=False)
 
+                # x = np.arange(0, 4 * np.pi, 0.1)
+                #
+                # while True:
+                #     plt.plot(x, [np.random.rand() for i in x], 'g-', linewidth=1.5, markersize=4)
+                #     plt.pause(0.01)
+                #     plt.clf()
+
                 ll.run_inference(multi_threading=False)
                 llr_list.append(ll.llr)
-                print(f'LLR = {np.nanmean(llr_list):.2f}.')
+                # print(f'LLR = {np.nanmean(llr_list):.2f}.')
                 print(f'i = {t}, '
                       f'lead_lag = {ll.lead_lag}, '
                       f'llr = {ll.llr:.2f}, '
