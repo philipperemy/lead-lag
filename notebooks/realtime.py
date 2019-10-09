@@ -17,38 +17,27 @@ class Color:
     UNDERLINE = '\033[4m'
 
 
-def generate_data(n):  # 300 ts, 2 time series, y leading w.r.t x, then lagging, then leading again.
+def generate_data(n):
     t_x = np.arange(0, n, 1)
     t_y = np.arange(0, n, 1)
 
-    # first 100 ts have a lag of 5 units of time.
     np.random.seed(124)
-    x1 = np.cumsum(np.random.randn(n // 3))
+    x1 = np.cumsum(np.random.randn(n // 2))
     y1 = np.zeros_like(x1)
-    y1[:-5] = x1[5:]  # x is lagging by 10 units.
-
-    # second 100 ts have a lag of 10 units of time.
-    x2 = np.cumsum(np.random.randn(n // 3))
-    y2 = np.zeros_like(x2)
-    y2[:-10] = x2[10:]  # x is lagging by 20 units.
+    y1[:-2] = x1[2:]  # x is lagging.
 
     # last 100 ts have a lag of -10 units of time.
-    x3 = np.cumsum(np.random.randn(n // 3))
-    y3 = np.zeros_like(x2)
-    y3[:-10] = x3[10:]  # x is lagging by 20 units.
+    x2 = np.cumsum(np.random.randn(n // 2))
+    y2 = np.zeros_like(x1)
+    y2[:-5] = x2[5:]  # x is lagging even more.
 
-    # swap x and y.
-    a = y3
-    y3 = x3
-    x3 = a
-
-    x = np.concatenate((x1, x2, x3))
-    y = np.concatenate((y1, y2, y3))
+    x = np.concatenate((x1, x2))
+    y = np.concatenate((y1, y2))
 
     # We want to make something asynchronous.
 
     def random_num_ts():
-        return int(int(3 / 4 * n) + np.random.uniform(low=-n // 10, high=n // 10))
+        return int(int(3 / 4 * n) + np.random.uniform(low=-n // 5, high=n // 5))
 
     t_x = sorted(np.random.choice(range(len(t_x)), size=random_num_ts(), replace=False))
     t_y = sorted(np.random.choice(range(len(t_y)), size=random_num_ts(), replace=False))
@@ -64,7 +53,7 @@ def main():
     # x is lagging, y is leading.
     # x contains 14,000 randomly sampled points.
     # y contains 8,000 randomly sampled points.
-    n = 600
+    n = 100
     x, y, t_x, t_y = generate_data(n)
 
     history_length = n // 10  # 100
