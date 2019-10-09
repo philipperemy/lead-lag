@@ -10,4 +10,4 @@ uninstall:
 	pip uninstall lead-lag
 
 clean:
-	rm -rf *.out *.c *.bin *.exe *.o *.a *.so build *.html __pycache__
+	rm -rf *.out lead_lag/*.c *.bin *.exe *.o *.a lead_lag/*.so build *.html __pycache__ lead_lag/__pycache__ notebooks/.ipynb_checkpoints/

@@ -22,6 +22,7 @@ def l2_norm_of_arr_diff(long[:] t_x, double[:] x):
     cdef long i2 = 0
     cdef double v1 = 0.0
     cdef double v2 = 0.0
+    cdef int i = 0
     for i in range(len(t_x) - 1):
         i1 = t_x[i]
         i2 = t_x[i+1]
@@ -29,7 +30,7 @@ def l2_norm_of_arr_diff(long[:] t_x, double[:] x):
         v2 = x[i2]
         norm_x += (v2 - v1) ** 2
     norm_x = sqrt(norm_x)
-    return norm_x
+    return norm_x + 1e-8 # for numerical stability.
 
 
 @cython.boundscheck(False)
@@ -56,6 +57,8 @@ def shifted_modified_hy_estimator(double[:] x, double[:] y,
         norm_x = 1.0
         norm_y = 1.0
 
+    cdef int ii0, ii1, jj0, jj1;
+    cdef long mid_point_origin, mid_point;
     clipped_t_y_minus_k = np.clip(np.array(t_y) - k, int(np.min(t_y)), int(np.max(t_y)))
     # Complexity: O(n log n)
     for ii in zip(t_x, t_x[1:]):  # O(n)
@@ -71,7 +74,7 @@ def shifted_modified_hy_estimator(double[:] x, double[:] y,
             # go left
             mid_point = mid_point_origin
             while True:
-                if mid_point + 1 > len(t_y) - 1 or mid_point < 0:
+                if mid_point + 1 > <long>(len(t_y) - 1) or mid_point < 0:
                     break
                 jj0, jj1 = (t_y[mid_point], t_y[mid_point + 1])
                 if overlap(ii0, ii1, jj0 - k, jj1 - k) > 0.0:
@@ -82,7 +85,7 @@ def shifted_modified_hy_estimator(double[:] x, double[:] y,
             # go right
             mid_point = mid_point_origin - 1
             while True:
-                if mid_point + 1 > len(t_y) - 1 or mid_point < 0:
+                if mid_point + 1 > <long>(len(t_y) - 1) or mid_point < 0:
                     break
                 jj0, jj1 = (t_y[mid_point], t_y[mid_point + 1])
                 if overlap(ii0, ii1, jj0 - k, jj1 - k) > 0.0:

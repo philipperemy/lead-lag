@@ -1,22 +1,10 @@
+import os
 from time import time
 
 import numpy as np
-import os
 import pandas as pd
 from lead_lag.lead_lag_impl import shifted_modified_hy_estimator
 
-# def parallel_function(f, sequence, num_threads=None):
-#     with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
-#         future_outputs_dict = {}
-#         futures = {executor.submit(f, k): k for k in sequence}
-#         for future in concurrent.futures.as_completed(futures):
-#             future_outputs_dict[future] = future.result()
-#
-#     outputs = []
-#     for future in futures:
-#         outputs.append(future_outputs_dict[future])
-#
-#     return outputs
 
 def parallel_function(f, sequence, num_threads=None):
     from multiprocessing import Pool
@@ -43,14 +31,16 @@ class CrossCorrelationHY:
         #     print('Run: make.')
 
     def fast_inference(self, num_threads=int(os.cpu_count())):
-        print(f'Running fast_inference() on {list(self.lag_range)} with {num_threads} threads.')
+        if self.verbose_mode:
+            print(f'Running fast_inference() on {list(self.lag_range)} with {num_threads} threads.')
         contrast = parallel_function(self.call, self.lag_range, num_threads=num_threads)
         return np.array(contrast)
 
     def slow_inference(self):
         e0 = self.lag_range[0]
         e1 = self.lag_range[-1]
-        print(f'Running slow_inference() on ({e0}:{e1}) with 1 thread.')
+        if self.verbose_mode:
+            print(f'Running slow_inference() on ({e0}:{e1}) with 1 thread.')
         contrasts = []
         for k in self.lag_range:
             value = self.call(k)
@@ -65,7 +55,7 @@ class CrossCorrelationHY:
         end_time = time()
         if self.verbose_mode:
             print(f'Estimation of the cross correlation for lag [{k}] '
-                  f'has completed and it took {end_time-start_time:.2f} seconds.')
+                  f'has completed and it took {end_time - start_time:.2f} seconds.')
         return value
 
     def write_results_to_file(self, filename, contrasts):
