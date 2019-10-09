@@ -1,4 +1,5 @@
 import warnings
+from collections import deque
 
 warnings.filterwarnings('ignore', message='numpy.dtype size changed')
 warnings.filterwarnings('ignore', message='numpy.ufunc size changed')
@@ -108,3 +109,15 @@ def convert_to_lead_lag_format(arr1, arr2):
         y[int(element_slice[0])] = element_slice[1]
         t_y.append(int(element_slice[0]))
     return x, y, t_x, t_y
+
+
+class RealTimeAggregator:
+
+    def __init__(self, history_length):
+        self.ts = deque(maxlen=history_length)
+
+    def add(self, value: float, timestamp: int):
+        self.ts.append((timestamp, value))
+
+    def get(self):
+        return np.vstack(self.ts)
