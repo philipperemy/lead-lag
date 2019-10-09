@@ -107,6 +107,10 @@ So which one leads? We apply the same lead lag procedure using the constrast qua
 
 The contrast is maximized for ϑ = 15 seconds. This promptly means that bitflyer is the leader as expected and that btcbox takes on average 15 seconds to reflect any changes on its price.
 
+### Realtime example
+
+- Refer to this script: [realtime.py](notebooks/realtime.py)
+
 ## Limitations of this current implementation
 
 - Only supports up to the second. Everything labeled in milliseconds is not correctly handled.
