@@ -85,7 +85,7 @@ Clearly, the argmax of the constrast is located around the correct value (lead_l
   <img src="figures/Figure_3.png" width="470">
 </p>
 
-We can also look at negative lags and define the LLR (standing for Lead/Lag Ratio) to measure the lead/lag relationships. If LLR > 1, then Y is the leader and X the lagger and vice versa for LLR <= 1. In our case, for the realization of our process (X,Y), we find LLR ~ 8.03.
+We can also look at negative lags and define the LLR (standing for Lead/Lag Ratio) to measure the lead/lag relationships. If LLR > 1, then X is the leader and Y the lagger and vice versa for LLR <= 1. In our case, for the realization of our process (X,Y), we find LLR ~ 8.03.
 
 <p align="center">
   <img src="figures/Figure_4.png" width="450">
