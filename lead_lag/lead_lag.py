@@ -1,4 +1,3 @@
-import warnings
 from collections import deque
 from time import time
 
