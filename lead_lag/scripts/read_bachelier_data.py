@@ -2,7 +2,8 @@ import numpy as np
 
 
 def sample_from_bachelier(rho=0.8, n=1000, lag=200):
-    s1, s2 = 1.0, 1.5
+    # s1, s2 = 1.0, 1.5
+    s1 = 1.0
 
     dt = 0.1
 
