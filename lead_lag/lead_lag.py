@@ -1,9 +1,4 @@
-import warnings
 from collections import deque
-
-warnings.filterwarnings('ignore', message='numpy.dtype size changed')
-warnings.filterwarnings('ignore', message='numpy.ufunc size changed')
-
 from time import time
 
 import numpy as np

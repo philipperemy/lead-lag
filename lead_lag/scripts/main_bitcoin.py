@@ -1,11 +1,7 @@
-import warnings
-
-warnings.filterwarnings('ignore', message='numpy.dtype size changed')
-warnings.filterwarnings('ignore', message='numpy.ufunc size changed')
-
 import os
-from tqdm import tqdm
 from glob import glob
+
+from tqdm import tqdm
 
 import lead_lag
 
