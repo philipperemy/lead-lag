@@ -35,7 +35,7 @@ pip install git+ssh://git@github.com/philipperemy/lead-lag
 git clone git@github.com:philipperemy/lead-lag.git && cd lead-lag
 
 # create and source virtual environment.
-virtualenv -p python3 venv && source venv3/bin/activate
+virtualenv -p python3 venv && source venv/bin/activate
 
 # Build from the sources
 make
