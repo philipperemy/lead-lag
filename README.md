@@ -3,7 +3,7 @@
 
 *Complexity*: **N O(LOG N)**
 
-*Limitations*: Only supports up to the second. Everything labeled in milliseconds is not correctly handled (at the moment).
+*Limitations*: Only supports up to the second. Everything labeled in milliseconds is not correctly handled (at the moment) but can be supported with a bit of work.
 
 
 ## Abstract
