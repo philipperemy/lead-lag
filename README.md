@@ -28,17 +28,21 @@ pip install Cython
 pip install git+ssh://git@github.com/philipperemy/lead-lag
 ```
 
-#### Method 2
+#### Install from the sources
 
 ```bash
+# clone the repository.
 git clone git@github.com:philipperemy/lead-lag.git && cd lead-lag
-virtualenv -p python3.6 venv3.6
-source venv3.6/bin/activate
+
+# create and source virtual environment.
+virtualenv -p python3 venv && source venv3/bin/activate
+
+# Build from the sources
 make
 ```
 
 A way to test that the library has been correctly installed.
-```
+```bash
 python -c "import lead_lag; print('success')"
 ```
 
