@@ -67,6 +67,23 @@ jupyter notebook lead_lag_example_1.ipynb
 jupyter notebook lead_lag_example_2.ipynb
 ```
 
+## Usage
+
+```python
+import lead_lag
+from lead_lag.scripts.read_bachelier_data import bachelier_data
+
+print('Using synthetic data (Bachelier).')
+x_with_ts, y_with_ts, true_lead_lag = bachelier_data()
+
+ll = lead_lag.LeadLag(x_with_ts, y_with_ts, max_absolute_lag=400, verbose=False)
+ll.plot_data()
+
+ll.run_inference(multi_threading=True)
+
+print('Correct lag =', true_lead_lag, 'Estimated lag =', ll.lead_lag)
+```
+
 ## Numerical Illustrations (cf. Jupyter Notebook files)
 
 ### Non synchronous data (generated from the Brownian Bachelier model)
