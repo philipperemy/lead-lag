@@ -17,18 +17,27 @@ By applying a certain contrast optimization based on a modified version of the H
 covariation estimator, we obtain a consistent estimator of the lead-lag parameter, together with
 an explicit rate of convergence governed by the sparsity of the sampling design.
 
-### Get started
+## Get started
 
 You have to install the library as a package first by running those commands:
+
+### PyPI (Only MacOS + Python3.7)
+
+```bash
+pip install lead-lag
+```
+
+Note: It only works if you have Python3.7 with the Darwin architecture (MacOS).
+
+### Install from the Sources (recommended)
 
 #### Method 1
 
 ```bash
-pip install Cython
 pip install git+ssh://git@github.com/philipperemy/lead-lag
 ```
 
-#### Install from the sources
+#### Method 2
 
 ```bash
 # clone the repository.
