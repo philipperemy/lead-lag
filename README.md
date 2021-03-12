@@ -1,7 +1,7 @@
 # Estimation of the lead-lag from non-synchronous data
-*Implementation of the paper https://arxiv.org/pdf/1303.4871.pdf*
+Link to [[paper](https://arxiv.org/pdf/1303.4871.pdf)].
 
-*Complexity*: **N O(LOG N)**
+*Complexity*: **O(n.LOG(n))**
 
 *Limitations*: Only supports up to the second. Everything labeled in milliseconds is not correctly handled (at the moment) but can be supported with a bit of work.
 
@@ -17,11 +17,11 @@ By applying a certain contrast optimization based on a modified version of the H
 covariation estimator, we obtain a consistent estimator of the lead-lag parameter, together with
 an explicit rate of convergence governed by the sparsity of the sampling design.
 
-### Get started
+## Get started
 
-You have to install the library as a package first by running those commands:
+You have to install the library first:
 
-#### PyPI
+### PyPI (MacOS + python3.7 ONLY)
 
 It only works if you have python3.7 with the Darwin architecture (MacOS).
 
@@ -29,7 +29,15 @@ It only works if you have python3.7 with the Darwin architecture (MacOS).
 pip install lead-lag
 ```
 
-#### Install from the sources (recommended)
+### Install from the sources (All platforms)
+
+#### Method 1
+
+```bash
+pip install git+ssh://git@github.com/philipperemy/lead-lag
+```
+
+#### Method 2
 
 ```bash
 # clone the repository.
@@ -42,10 +50,21 @@ virtualenv -p python3 venv && source venv/bin/activate
 make
 ```
 
-A way to test that the library has been correctly installed.
+Run this to make sure that the library has been correctly installed:
 
-```bash
-python -c "import lead_lag; print('success')"
+```python
+import lead_lag
+from lead_lag.scripts.read_bachelier_data import bachelier_data
+
+print('Using synthetic data (Bachelier).')
+x_with_ts, y_with_ts, true_lead_lag = bachelier_data()
+
+ll = lead_lag.LeadLag(x_with_ts, y_with_ts, max_absolute_lag=400, verbose=False)
+ll.plot_data()
+
+ll.run_inference(multi_threading=True)
+
+print('Correct lag =', true_lead_lag, 'Estimated lag =', ll.lead_lag)
 ```
 
 Then you can run one of those Jupyter Notebooks:
@@ -54,6 +73,7 @@ Then you can run one of those Jupyter Notebooks:
 - [lead_lag_example_2.ipynb](notebooks/lead_lag_example_2.ipynb)
 
 ```bash
+# clone the repository first.
 pip install jupyter
 cd notebooks
 jupyter notebook lead_lag_example_1.ipynb
