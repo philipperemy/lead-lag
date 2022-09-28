@@ -33,3 +33,4 @@ jobs:
       - name: Test import
         run: |
           python -c "import lead_lag; print('success')"
+          cd examples && python example_synthetic_data.py

@@ -18,7 +18,7 @@ def main():
     ftx_file = Path('../data/BTC-PERP.csv.zip')
     bitmex, ftx = read_data(bitmex_file, ftx_file)
 
-    ll = LeadLag(ts1=ftx, ts2=bitmex, max_lag=1, verbose=True, min_precision=0.001)
+    ll = LeadLag(ts1=ftx, ts2=bitmex, max_lag=1, verbose=False, min_precision=0.001)
     print('Running inference...')
     ll.run_inference(num_threads=cpu_count() // 2)
     print(f'Estimated lag: {ll.lead_lag} seconds.')

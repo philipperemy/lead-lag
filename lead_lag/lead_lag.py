@@ -22,7 +22,7 @@ class LeadLag:
             self,
             ts1: pd.Series,
             ts2: pd.Series,
-            max_lag: int,  # in seconds. Interval of research: [-max_lag, +max_lag].
+            max_lag: Union[float, int],  # in seconds. Interval of research: [-max_lag, +max_lag].
             verbose: bool = False,
             min_precision: Optional[float] = None,
             specific_lags: Optional[List[float]] = None
@@ -71,6 +71,8 @@ class LeadLag:
         self.x, self.y, self.t_x, self.t_y, = convert_to_lead_lag_format(arr_1_with_ts, arr_2_with_ts)
         assert len(self.x) == len(self.y)
         max_lag = int(max_lag / self.precision)
+        if max_lag <= 0:
+            raise Exception('Max lag is too low. Increase it. Or increase the precision.')
         if specific_lags is None:
             self.lag_range = np.arange(-max_lag, max_lag + 1, 1)
         else:

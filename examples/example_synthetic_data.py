@@ -20,9 +20,9 @@ def main():
     ll = LeadLag(ts1=d['ts'], ts2=d['ts_lag'], max_lag=10)
     print('Running inference...')
     ll.run_inference()
-    print(f'Estimated lag: {ll.lead_lag} seconds.')
+    print(f'Estimated lag is {ll.lead_lag} seconds. True lag was {data_lag_in_seconds} seconds.')
     print(f'Positive lag means ts1 is leading. LLR: {ll.llr:.2f} (cf. paper for the definition of LLR).')
-    ll.plot_results()
+    # ll.plot_results()
 
 
 if __name__ == '__main__':
