@@ -12,7 +12,7 @@ from lead_lag.contrast import CrossCorrelationHY
 def prune_to_specific_precision(d: pd.Series, target_precision_ms) -> pd.Series:
     try:
         return d[0:-1][np.array(np.diff(d.index) / 1e6, dtype=int) > target_precision_ms * 1e3]
-    except:
+    except Exception:
         return d[0:-1][np.array([a.total_seconds() * 1e3 > target_precision_ms for a in np.diff(d.index)])]
 
 
@@ -59,7 +59,7 @@ class LeadLag:
             elif 0.0001 < min_precision < 0.001:
                 min_precision = 0.0001
             else:
-                raise Exception(f'Valid values for precision are 1, 0.1, 0.01, 0.001 and 0.0001. Minimum is 100us.')
+                raise Exception('Valid values for precision are 1, 0.1, 0.01, 0.001 and 0.0001. Minimum is 100us.')
         print(f'Precision = {min_precision * 1e3} ms.')
         self.contrasts = None
         self.precision = min_precision
