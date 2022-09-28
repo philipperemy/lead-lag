@@ -16,7 +16,7 @@ class LeadLag:
                  verbose: bool,
                  specific_lags=None):
         self.contrasts = None
-        # lead format format is also useful for plotting.
+        # lead format is also useful for plotting.
         self.x, self.y, self.t_x, self.t_y, = convert_to_lead_lag_format(arr_1_with_ts, arr_2_with_ts)
         assert len(self.x) == len(self.y)
         if specific_lags is None:
@@ -62,15 +62,19 @@ class LeadLag:
     def write_results_to_file(self, output_filename):
         self._contrasts_to_df().to_csv(path_or_buf=output_filename)
 
-    def _contrasts_to_df(self):
-        df = pd.DataFrame(data=np.transpose([self.lag_range, self.contrasts]), columns=['LagRange', 'Contrast'])
+    def _contrasts_to_df(self, precision=1):
+        adjusted_lag_range = self.lag_range * precision
+        df = pd.DataFrame(data=np.transpose([adjusted_lag_range, self.contrasts]), columns=['LagRange', 'Contrast'])
         df.set_index('LagRange', inplace=True)
         return df
 
-    def plot_results(self):
+    def plot_results(self, precision=1):
         import matplotlib.pyplot as plt
         if self.contrasts is not None:
-            self._contrasts_to_df().plot()
+            self._contrasts_to_df(precision).plot(
+                xlabel='Lag (seconds)',
+                ylabel='Contrast (absolute cross correlation).'
+            )
             plt.show()
 
     def plot_data(self, legend=None):
