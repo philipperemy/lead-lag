@@ -4,7 +4,7 @@ import pandas as pd
 
 def read_small_data(small_filename: str, precision_in_seconds: float = 1):
     if precision_in_seconds not in {1, 0.1, 0.01, 0.001}:
-        raise Exception(f'Precision should be either 1 (1000ms), 0.1 (100ms), 0.01 (10 ms) or 0.001 (1ms).')
+        raise Exception('Precision should be either 1 (1000ms), 0.1 (100ms), 0.01 (10 ms) or 0.001 (1ms).')
     print(f'Read: {small_filename}.')
     d = pd.read_csv(small_filename, parse_dates=True, index_col=0)
     exponents = dict({1: 9, 0.1: 8, 0.01: 7, 0.001: 6})
