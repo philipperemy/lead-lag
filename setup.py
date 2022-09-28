@@ -1,13 +1,15 @@
-from setuptools import setup, find_packages
-import sys
 import os
+import sys
+
+from setuptools import setup, find_packages
 
 VERSION = '1.6'
 
 # Cython has to be installed before. And I could not find any other ways.
 os.system('pip install cython')
 
-from Cython.Build import cythonize
+# noinspection PyPackageRequirements
+from Cython.Build import cythonize  # noqa: E402
 
 if sys.version_info[0] < 3:
     raise Exception('Must be using Python 3.')
