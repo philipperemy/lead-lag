@@ -18,28 +18,25 @@ def parallel_function(f, sequence, num_threads=None):
 
 class CrossCorrelationHY:
 
-    def __init__(self, x, y, t_x, t_y, lag_range, normalize=True, verbose_mode=True):
+    def __init__(self, x, y, t_x, t_y, lag_range, normalize=True, verbose=True):
         self.x = np.array(x)
         self.y = np.array(y)
         self.t_x = np.array(t_x)
         self.t_y = np.array(t_y)
         self.lag_range = lag_range
         self.normalize = normalize
-        self.verbose_mode = verbose_mode
-        # if len(glob('lead_lag*.so')) == 0:
-        #     print('The library has not been compiled. It will run much slower.')
-        #     print('Run: make.')
+        self.verbose = verbose
 
     def fast_inference(self, num_threads=int(os.cpu_count())):
-        if self.verbose_mode:
-            print(f'Running fast_inference() on {list(self.lag_range)} with {num_threads} threads.')
+        if self.verbose:
+            print(f'Running fast_inference() on {len(self.lag_range)} lags with {num_threads} threads.')
         contrast = parallel_function(self.call, self.lag_range, num_threads=num_threads)
         return np.array(contrast)
 
     def slow_inference(self):
         e0 = self.lag_range[0]
         e1 = self.lag_range[-1]
-        if self.verbose_mode:
+        if self.verbose:
             print(f'Running slow_inference() on ({e0}:{e1}) with 1 thread.')
         contrasts = []
         for k in self.lag_range:
@@ -53,9 +50,8 @@ class CrossCorrelationHY:
         start_time = time()
         value = shifted_modified_hy_estimator(self.x, self.y, self.t_x, self.t_y, k, self.normalize)
         end_time = time()
-        if self.verbose_mode:
-            print(f'Estimation of the cross correlation for lag [{k}] '
-                  f'has completed and it took {end_time - start_time:.2f} seconds.')
+        if self.verbose:
+            print(f'Lag={k}, contrast={value:.5f}, elapsed={(end_time - start_time) * 1e3:.2f}ms.')
         return value
 
     def write_results_to_file(self, filename, contrasts):

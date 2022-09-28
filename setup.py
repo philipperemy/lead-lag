@@ -3,7 +3,7 @@ import sys
 
 from setuptools import setup, find_packages
 
-VERSION = '1.6'
+VERSION = '1.7'
 
 # Cython has to be installed before. And I could not find any other ways.
 os.system('pip install cython')
