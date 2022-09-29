@@ -10,11 +10,18 @@ import pandas as pd
 from lead_lag.contrast import CrossCorrelationHY
 
 
+# noinspection PyBroadException
 def prune_to_specific_precision(d: pd.Series, target_precision_ms) -> pd.Series:
     try:
         return d[0:-1][np.array(np.diff(d.index) / 1e6, dtype=int) > target_precision_ms * 1e3]
     except Exception:
         return d[0:-1][np.array([a.total_seconds() * 1e3 > target_precision_ms for a in np.diff(d.index)])]
+
+
+def lag(ts1: pd.Series, ts2: pd.Series, max_lag: Union[float, int]) -> Optional[float]:
+    ll = LeadLag(ts1, ts2, max_lag)
+    ll.run_inference()
+    return ll.lead_lag
 
 
 class LeadLag:
@@ -29,6 +36,8 @@ class LeadLag:
             specific_lags: Optional[List[float]] = None
     ):
         self.verbose = verbose
+        ts1.dropna(inplace=True)
+        ts2.dropna(inplace=True)
         ts1.sort_index(inplace=True)
         ts2.sort_index(inplace=True)
         ts1 = ts1[~ts1.index.duplicated(keep='first')]
