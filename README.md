@@ -1,12 +1,11 @@
 # Estimation of the lead-lag from non-synchronous data
+
 Link to [[paper](https://arxiv.org/pdf/1303.4871.pdf)].
 
 *Complexity*: **O(n.LOG(n))**
 
-*Limitations*: Only supports up to the second. Everything labeled in milliseconds is not correctly handled (at the moment) but can be supported with a bit of work.
-
-
 ## Abstract
+
 We propose a simple continuous time model for modeling the lead-lag effect between two financial
 assets. A two-dimensional process (Xt, Yt) reproduces a lead-lag effect if, for some time shift
 ϑ ∈ R, the process (Xt, Yt+ϑ) is a semi-martingale with respect to a certain filtration. The
@@ -20,14 +19,6 @@ an explicit rate of convergence governed by the sparsity of the sampling design.
 ## Get started
 
 You have to install the library first:
-
-### PyPI (MacOS + python3.7 ONLY)
-
-It only works if you have python3.7 with the Darwin architecture (MacOS).
-
-```bash
-pip install lead-lag
-```
 
 ### Install from the sources (All platforms)
 
@@ -50,41 +41,24 @@ virtualenv -p python3 venv && source venv/bin/activate
 make
 ```
 
-Run this to make sure that the library has been correctly installed:
+Then, you can run the Jupyter Notebook:
 
-```python
-import lead_lag
-from lead_lag.scripts.read_bachelier_data import bachelier_data
-
-print('Using synthetic data (Bachelier).')
-x_with_ts, y_with_ts, true_lead_lag = bachelier_data()
-
-ll = lead_lag.LeadLag(x_with_ts, y_with_ts, max_absolute_lag=400, verbose=False)
-ll.plot_data()
-
-ll.run_inference(multi_threading=True)
-
-print('Correct lag =', true_lead_lag, 'Estimated lag =', ll.lead_lag)
-```
-
-Then you can run one of those Jupyter Notebooks:
-
-- [lead_lag_example_1.ipynb](notebooks/lead_lag_example_1.ipynb)
 - [lead_lag_example_2.ipynb](notebooks/lead_lag_example_2.ipynb)
 
 ```bash
-# clone the repository first.
-pip install jupyter
-cd notebooks
-jupyter notebook lead_lag_example_1.ipynb
-jupyter notebook lead_lag_example_2.ipynb
+make jupyter
 ```
+
+Or just browse the [examples](examples) directory to learn more about the lib.
 
 ## Numerical Illustrations (cf. Jupyter Notebook files)
 
-### Non synchronous data (generated from the Brownian Bachelier model)
+### Non-synchronous data (generated from the Brownian Bachelier model)
+
+*Disclaimer: This example works with the previous version 1.X. The new version has different examples. This one in particular has not been ported.*
 
 We simulate a lead-lag Bachelier model without drift with:
+
 - N = 10,000 (grid on which we sample random arriving times for both X and Y).
 - #I = 500
 - #J = 3,000
@@ -105,43 +79,50 @@ We show a realization of the process (Xt, Yt) and its corresponding Constrast vs
 
 *The contrast is just a positive definitive cross correlation quantity.*
 
-Clearly, the argmax of the constrast is located around the correct value (lead_lag = 200). We also observe some persistence in the constrast (I may have forgotten an extra term in the modified HY estimator). Even though X has a sampling rate 7x lower than Y, the estimator can still pick up the correct value. We can also normalize the contrast to have an unbiased estimation of the cross correlation function rho for different lags. In theory this function should be a Dirac centered around the lead_lag parameter with ρ(lead_lag) = 0.8 and 0 elsewhere.
+Clearly, the argmax of the contrast is located around the correct value (lead_lag = 200). We also observe some
+persistence in the contrast (I may have forgotten an extra term in the modified HY estimator). Even though X has a
+sampling rate 7x lower than Y, the estimator can still pick up the correct value. We can also normalize the contrast to
+have an unbiased estimation of the cross correlation function rho for different lags. In theory this function should be
+a Dirac centered around the lead_lag parameter with ρ(lead_lag) = 0.8 and 0 elsewhere.
 
 <p align="center">
   <img src="figures/Figure_3.png" width="470">
 </p>
 
-We can also look at negative lags and define the LLR (standing for Lead/Lag Ratio) to measure the lead/lag relationships. If LLR > 1, then X is the leader and Y the lagger and vice versa for LLR <= 1. In our case, for the realization of our process (X,Y), we find LLR ~ 8.03.
+We can also look at negative lags and define the LLR (standing for Lead/Lag Ratio) to measure the lead/lag
+relationships. If LLR > 1, then X is the leader and Y the lagger and vice versa for LLR <= 1. In our case, for the
+realization of our process (X,Y), we find LLR ~ 8.03.
 
 <p align="center">
   <img src="figures/Figure_4.png" width="450">
 </p>
 
-### Non synchronous data (Bitcoin markets)
+### Non-synchronous data (Bitcoin markets)
 
-We now consider a real world use case where we have two Japanese bitcoin exchanges: bitflyer and btcbox. The former has higher liquidity hence we expect it to lead the latter. If we plot the prices of BTC/JPY for both exchanges for a specific day, we get:
+We now consider a real world use case where we have two Japanese bitcoin exchanges: bitflyer and btcbox. The former has
+higher liquidity hence we expect it to lead the latter. If we plot the prices of BTC/JPY for both exchanges for a
+specific day, we get:
 
 <p align="center">
   <img src="figures/Figure_5.png" width="500">
 </p>
 
-So which one leads? We apply the same lead lag procedure using the constrast quantity computed on a grid `Gn = ]-40,40[` (unit is second here).
+So which one leads? We apply the same lead lag procedure using the constrast quantity computed on a
+grid `Gn = ]-40,40[` (unit is second here).
 
 <p align="center">
   <img src="figures/Figure_6.png" width="500">
 </p>
 
-The contrast is maximized for ϑ = 15 seconds. This promptly means that bitflyer is the leader as expected and that btcbox takes on average 15 seconds to reflect any changes on its price.
+The contrast is maximized for ϑ = 15 seconds. This promptly means that bitflyer is the leader as expected and that
+btcbox takes on average 15 seconds to reflect any changes on its price.
 
 ### Realtime example
 
-- Refer to this script: [realtime.py](notebooks/realtime.py)
-
-## Limitations of this current implementation
-
-- Only supports up to the second. Everything labeled in milliseconds is not correctly handled.
+- Refer to this script: [realtime](examples/realtime.py)
 
 ## References
+
 - [High-Frequency Covariance Estimates With Noisy and Asynchronous Financial Data](https://www.princeton.edu/~yacine/QMLE2D.pdf)
 - [On covariance estimation of non-synchronously observed diffusion](http://www.ms.u-tokyo.ac.jp/~nakahiro/mypapers_for_personal_use/hayyos03.pdf)
 - [Estimation of the lead-lag parameter from non-synchronous data](https://arxiv.org/pdf/1303.4871.pdf)

@@ -19,4 +19,4 @@ deploy:
 
 jupyter:
 	pip install jupyter
-	cd notebooks && jupyter notebook lead_lag_example_1.ipynb
+	cd notebooks && jupyter notebook lead_lag_example_2.ipynb
