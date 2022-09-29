@@ -1,6 +1,4 @@
-# Lead Lag from non-synchronous data [[paper](https://arxiv.org/abs/1303.4871)]
-
-## Abstract
+## Lead Lag from non-synchronous data [[paper](https://arxiv.org/abs/1303.4871)]
 
 > We propose a simple continuous time model for modeling the lead-lag effect between two financial
 assets. A two-dimensional process (Xt, Yt) reproduces a lead-lag effect if, for some time shift
@@ -13,26 +11,47 @@ covariation estimator, we obtain a consistent estimator of the lead-lag paramete
 an explicit rate of convergence governed by the sparsity of the sampling design. The complexity is
 **O(n.LOG(n))**.
 
-## API
+### API
 
 ```python
 def lag(ts1: pd.Series, ts2: pd.Series, max_lag: Union[float, int]) -> Optional[float]
 ```
 
-### Arguments
+#### Arguments
 - `ts1`: a Pandas Series.
 - `ts2`: a Pandas Series.
 - `max_lag`: the maximum lag to find in seconds. `max_lag` will define an interval to search for the best lag in `[max_lag, max_lag]`.
 
-*NOTE*: the indexes of `ts1` and `ts2` do not need to match. The non-synchronous data is supported.
+*NOTE*: the indexes of `ts1` and `ts2` do not need to match. The non-synchronous data is supported. At the moment, the minimum lag possible is 100 microseconds (for performance reasons).
 
-### Returns
+#### Returns
 The signed `lag` (unit is second and). If `lag>0`, `ts1` is the leader, else `ts2` leads.
 
 There is also a `LeadLag` object, which offers more features. Refer to the examples to learn how to use it.
 
+### Example
 
-## Installation
+Here is how the library works on the simplest example:
+
+```python
+from datetime import datetime, timedelta
+
+import numpy as np
+import pandas as pd
+
+from lead_lag import lag
+
+ts = pd.Series(
+    data=np.cumsum(np.random.uniform(low=-1, high=1, size=1000)),
+    index=[datetime(2022, 1, 1, 12, 0, 0) - timedelta(seconds=i) for i in range(1000)]
+)
+print('lag=', lag(ts, ts.shift(-9), max_lag=10))
+# lag= 9.0
+```
+
+### Installation
+
+Follow those steps to install it:
 
 ```bash
 # 1. Recommended for all platforms
@@ -47,7 +66,7 @@ virtualenv -p python3 venv && source venv/bin/activate
 make
 ```
 
-## Examples
+### More Examples
 
 Browse the [examples](examples) directory to learn more about the lib.
 
@@ -57,9 +76,9 @@ You can also run the Jupyter Notebook [lead_lag_example_2.ipynb](notebooks/lead_
 make jupyter
 ```
 
-## Numerical Illustrations
+### Numerical Illustrations
 
-### Non-synchronous data (generated from the Brownian Bachelier model)
+#### Non-synchronous data (generated from the Brownian Bachelier model)
 
 *Disclaimer: This example works with the previous version 1.X. The new version has different examples. This one in particular has not been ported.*
 
@@ -103,7 +122,7 @@ realization of our process (X,Y), we find LLR ~ 8.03.
   <img src="figures/Figure_4.png" width="450">
 </p>
 
-### Non-synchronous data (Bitcoin markets)
+#### Non-synchronous data (Bitcoin markets)
 
 We now consider a real world use case where we have two Japanese bitcoin exchanges: bitflyer and btcbox. The former has
 higher liquidity hence we expect it to lead the latter. If we plot the prices of BTC/JPY for both exchanges for a
@@ -123,7 +142,7 @@ grid `Gn = ]-40,40[` (unit is second here).
 The contrast is maximized for ϑ = 15 seconds. This promptly means that bitflyer is the leader as expected and that
 btcbox takes on average 15 seconds to reflect any changes on its price.
 
-## References
+### References
 
 - [High-Frequency Covariance Estimates With Noisy and Asynchronous Financial Data](https://www.princeton.edu/~yacine/QMLE2D.pdf)
 - [On covariance estimation of non-synchronously observed diffusion](http://www.ms.u-tokyo.ac.jp/~nakahiro/mypapers_for_personal_use/hayyos03.pdf)
