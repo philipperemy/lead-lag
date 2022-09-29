@@ -25,7 +25,7 @@ lead_lag.lag(ts1: pd.Series, ts2: pd.Series, max_lag: Union[float, int]) -> Opti
 *NOTE*: the indexes of `ts1` and `ts2` do not need to match. The non-synchronous data is supported. At the moment, the minimum lag possible is 100 microseconds (for performance reasons).
 
 #### Returns
-The signed estimated `lag` (unit is second). If `lag>0`, `ts1` is the leader. If an Error occurs, `None` is returned.
+The signed estimated `lag` (unit is second). If `lag>0`, `ts1` is the leader. If an error occurs, `None` is returned.
 
 There is also a `lead_lag.LeadLag` object, which offers more features. Refer to the examples to learn how to use it.
 
