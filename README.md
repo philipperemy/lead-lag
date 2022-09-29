@@ -14,7 +14,7 @@ an explicit rate of convergence governed by the sparsity of the sampling design.
 ### API
 
 ```python
-def lag(ts1: pd.Series, ts2: pd.Series, max_lag: Union[float, int]) -> Optional[float]
+lead_lag.lag(ts1: pd.Series, ts2: pd.Series, max_lag: Union[float, int]) -> Optional[float]
 ```
 
 #### Arguments
@@ -25,9 +25,9 @@ def lag(ts1: pd.Series, ts2: pd.Series, max_lag: Union[float, int]) -> Optional[
 *NOTE*: the indexes of `ts1` and `ts2` do not need to match. The non-synchronous data is supported. At the moment, the minimum lag possible is 100 microseconds (for performance reasons).
 
 #### Returns
-The signed `lag` (unit is second and). If `lag>0`, `ts1` is the leader, else `ts2` leads.
+The signed `lag` (unit is second). If `lag>0`, `ts1` is the leader, otherwise `ts2` leads.
 
-There is also a `LeadLag` object, which offers more features. Refer to the examples to learn how to use it.
+There is also a `lead_lag.LeadLag` object, which offers more features. Refer to the examples to learn how to use it.
 
 ### Example
 
@@ -54,13 +54,13 @@ print('lag=', lag(ts, ts.shift(-9), max_lag=10))
 Follow those steps to install it:
 
 ```bash
-# 1. Recommended for all platforms
+# 1. Recommended for all platforms.
 pip install git+ssh://git@github.com/philipperemy/lead-lag
 
-# 2. If you have python 3.9 and MacOS
+# 2. If you have python 3.9 and MacOS. Platform specific.
 pip install lead_lag
 
-# 3. From cloning the repository
+# 3. Cloning the repository.
 git clone git@github.com:philipperemy/lead-lag.git && cd lead-lag
 virtualenv -p python3 venv && source venv/bin/activate
 make
@@ -68,7 +68,9 @@ make
 
 ### More Examples
 
-Browse the [examples](examples) directory to learn more about the lib.
+Browse the [examples](examples) directory to learn more about the lib:
+- FTX vs Bitmex lead lag: FTX is leading Bitmex and the lag is 90ms on 2022-09-27.
+- Bitflyer vs Btcbox lead lag: Bitflyer is leading Btcbox and the lag is 15s in 2018.
 
 You can also run the Jupyter Notebook [lead_lag_example_2.ipynb](notebooks/lead_lag_example_2.ipynb):
 
@@ -80,26 +82,19 @@ make jupyter
 
 #### Non-synchronous data (generated from the Brownian Bachelier model)
 
-*Disclaimer: This example works with the previous version 1.X. The new version has different examples. This one in particular has not been ported.*
+We simulate a lead-lag Bachelier model without drift with: 
 
-We simulate a lead-lag Bachelier model without drift with:
-
-- N = 10,000 (grid on which we sample random arriving times for both X and Y).
-- #I = 500
-- #J = 3,000
-- ρ = 0.80, x0 = 1.0, y0 = 2.1, s1 = 1.0, s2 = 1.5
-- lead_lag = 200 (X is the leader, Y the lagger)
-- finite grid Gn = [0, 400]
+N = 10,000 (grid on which we sample random arriving times for both X and Y), #I = 500, #J = 3,000, ρ = 0.80, x0 = 1.0, y0 = 2.1, s1 = 1.0, s2 = 1.5, lead_lag = 200 (X is the leader, Y the lagger), finite grid Gn = [0, 400]. 
 
 We show a realization of the process (Xt, Yt) and its corresponding Constrast vs Lag plot:
 
 <p align="center">
-  <img src="figures/Figure_1.png" width="500">
+  <img src="figures/Figure_1.png" width="400">
 </p>
 
 
 <p align="center">
-  <img src="figures/Figure_2.png" width="500">
+  <img src="figures/Figure_2.png" width="400">
 </p>
 
 *The contrast is just a positive definitive cross correlation quantity.*
@@ -111,7 +106,7 @@ have an unbiased estimation of the cross correlation function rho for different 
 a Dirac centered around the lead_lag parameter with ρ(lead_lag) = 0.8 and 0 elsewhere.
 
 <p align="center">
-  <img src="figures/Figure_3.png" width="470">
+  <img src="figures/Figure_3.png" width="370">
 </p>
 
 We can also look at negative lags and define the LLR (standing for Lead/Lag Ratio) to measure the lead/lag
@@ -119,7 +114,7 @@ relationships. If LLR > 1, then X is the leader and Y the lagger and vice versa 
 realization of our process (X,Y), we find LLR ~ 8.03.
 
 <p align="center">
-  <img src="figures/Figure_4.png" width="450">
+  <img src="figures/Figure_4.png" width="350">
 </p>
 
 #### Non-synchronous data (Bitcoin markets)
@@ -129,14 +124,14 @@ higher liquidity hence we expect it to lead the latter. If we plot the prices of
 specific day, we get:
 
 <p align="center">
-  <img src="figures/Figure_5.png" width="500">
+  <img src="figures/Figure_5.png" width="400">
 </p>
 
 So which one leads? We apply the same lead lag procedure using the constrast quantity computed on a
 grid `Gn = ]-40,40[` (unit is second here).
 
 <p align="center">
-  <img src="figures/Figure_6.png" width="500">
+  <img src="figures/Figure_6.png" width="400">
 </p>
 
 The contrast is maximized for ϑ = 15 seconds. This promptly means that bitflyer is the leader as expected and that
