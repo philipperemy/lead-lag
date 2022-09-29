@@ -20,15 +20,19 @@ an explicit rate of convergence governed by the sparsity of the sampling design.
 
 You have to install the library first:
 
-### Install from the sources (All platforms)
+### Method 1 (Only if you have python 3.8 and MacOS)
 
-#### Method 1
+```
+pip install lead_lag
+```
+
+### Method 2 (Recommended, for all platforms)
 
 ```bash
 pip install git+ssh://git@github.com/philipperemy/lead-lag
 ```
 
-#### Method 2
+### Method 3
 
 ```bash
 # clone the repository.
