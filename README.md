@@ -1,12 +1,10 @@
 # Estimation of the lead-lag from non-synchronous data
 
-Link to [[paper](https://arxiv.org/pdf/1303.4871.pdf)].
-
-*Complexity*: **O(n.LOG(n))**
+Link to [[paper](https://arxiv.org/abs/1303.4871)].
 
 ## Abstract
 
-We propose a simple continuous time model for modeling the lead-lag effect between two financial
+> We propose a simple continuous time model for modeling the lead-lag effect between two financial
 assets. A two-dimensional process (Xt, Yt) reproduces a lead-lag effect if, for some time shift
 ϑ ∈ R, the process (Xt, Yt+ϑ) is a semi-martingale with respect to a certain filtration. The
 value of the time shift ϑ is the lead-lag parameter. Depending on the underlying filtration,
@@ -14,46 +12,49 @@ the standard no-arbitrage case is obtained for ϑ = 0. We study the problem of e
 unknown parameter ϑ ∈ R, given randomly sampled non-synchronous data from (Xt) and (Yt).
 By applying a certain contrast optimization based on a modified version of the Hayashi–Yoshida
 covariation estimator, we obtain a consistent estimator of the lead-lag parameter, together with
-an explicit rate of convergence governed by the sparsity of the sampling design.
+an explicit rate of convergence governed by the sparsity of the sampling design. The complexity is
+**O(n.LOG(n))**.
 
-## Get started
-
-You have to install the library first:
-
-### Method 1 (Only if you have python 3.8 and MacOS)
-
-```
-pip install lead_lag
-```
-
-### Method 2 (Recommended, for all platforms)
+## Installation
 
 ```bash
+# 1. Recommended for all platforms
 pip install git+ssh://git@github.com/philipperemy/lead-lag
-```
 
-### Method 3
+# 2. If you have python 3.9 and MacOS
+pip install lead_lag
 
-```bash
-# clone the repository.
+# 3. From cloning the repository
 git clone git@github.com:philipperemy/lead-lag.git && cd lead-lag
-
-# create and source virtual environment.
 virtualenv -p python3 venv && source venv/bin/activate
-
-# Build from the sources
 make
 ```
 
-Then, you can run the Jupyter Notebook:
+## API
 
-- [lead_lag_example_2.ipynb](notebooks/lead_lag_example_2.ipynb)
+```python
+def lag(ts1: pd.Series, ts2: pd.Series, max_lag: Union[float, int]) -> Optional[float]
+```
+
+### Arguments
+- `ts1`: a Pandas Series.
+- `ts2`: a Pandas Series.
+- `max_lag`: the maximum lag to find in seconds. `max_lag` will define an interval to search for the best lag in `[max_lag, max_lag]`.
+
+### Returns
+The signed `lag` (unit is second and). If `lag>0`, `ts1` is the leader, else `ts2` leads.
+
+There is also a `LeadLag` object, which offers more features. Refer to the examples to learn how to use it.
+
+## Examples
+
+Browse the [examples](examples) directory to learn more about the lib.
+
+You can also run the Jupyter Notebook [lead_lag_example_2.ipynb](notebooks/lead_lag_example_2.ipynb):
 
 ```bash
 make jupyter
 ```
-
-Or just browse the [examples](examples) directory to learn more about the lib.
 
 ## Numerical Illustrations (cf. Jupyter Notebook files)
 
@@ -120,10 +121,6 @@ grid `Gn = ]-40,40[` (unit is second here).
 
 The contrast is maximized for ϑ = 15 seconds. This promptly means that bitflyer is the leader as expected and that
 btcbox takes on average 15 seconds to reflect any changes on its price.
-
-### Realtime example
-
-- Refer to this script: [realtime](examples/realtime.py)
 
 ## References
 
