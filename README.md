@@ -1,6 +1,4 @@
-# Estimation of the lead-lag from non-synchronous data
-
-Link to [[paper](https://arxiv.org/abs/1303.4871)].
+# Lead Lag from non-synchronous data [[paper](https://arxiv.org/abs/1303.4871)]
 
 ## Abstract
 
@@ -14,21 +12,6 @@ By applying a certain contrast optimization based on a modified version of the H
 covariation estimator, we obtain a consistent estimator of the lead-lag parameter, together with
 an explicit rate of convergence governed by the sparsity of the sampling design. The complexity is
 **O(n.LOG(n))**.
-
-## Installation
-
-```bash
-# 1. Recommended for all platforms
-pip install git+ssh://git@github.com/philipperemy/lead-lag
-
-# 2. If you have python 3.9 and MacOS
-pip install lead_lag
-
-# 3. From cloning the repository
-git clone git@github.com:philipperemy/lead-lag.git && cd lead-lag
-virtualenv -p python3 venv && source venv/bin/activate
-make
-```
 
 ## API
 
@@ -46,6 +29,22 @@ The signed `lag` (unit is second and). If `lag>0`, `ts1` is the leader, else `ts
 
 There is also a `LeadLag` object, which offers more features. Refer to the examples to learn how to use it.
 
+
+## Installation
+
+```bash
+# 1. Recommended for all platforms
+pip install git+ssh://git@github.com/philipperemy/lead-lag
+
+# 2. If you have python 3.9 and MacOS
+pip install lead_lag
+
+# 3. From cloning the repository
+git clone git@github.com:philipperemy/lead-lag.git && cd lead-lag
+virtualenv -p python3 venv && source venv/bin/activate
+make
+```
+
 ## Examples
 
 Browse the [examples](examples) directory to learn more about the lib.
@@ -56,7 +55,7 @@ You can also run the Jupyter Notebook [lead_lag_example_2.ipynb](notebooks/lead_
 make jupyter
 ```
 
-## Numerical Illustrations (cf. Jupyter Notebook files)
+## Numerical Illustrations
 
 ### Non-synchronous data (generated from the Brownian Bachelier model)
 
