@@ -24,6 +24,8 @@ def lag(ts1: pd.Series, ts2: pd.Series, max_lag: Union[float, int]) -> Optional[
 - `ts2`: a Pandas Series.
 - `max_lag`: the maximum lag to find in seconds. `max_lag` will define an interval to search for the best lag in `[max_lag, max_lag]`.
 
+*NOTE*: the indexes of `ts1` and `ts2` do not need to match. The non-synchronous data is supported.
+
 ### Returns
 The signed `lag` (unit is second and). If `lag>0`, `ts1` is the leader, else `ts2` leads.
 
