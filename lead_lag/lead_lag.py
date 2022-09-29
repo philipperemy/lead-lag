@@ -1,4 +1,5 @@
 from collections import deque
+from datetime import datetime
 from pathlib import Path
 from time import time
 from typing import Optional, Union, List, Tuple
@@ -60,7 +61,8 @@ class LeadLag:
                 min_precision = 0.0001
             else:
                 raise Exception('Valid values for precision are 1, 0.1, 0.01, 0.001 and 0.0001. Minimum is 100us.')
-        print(f'Precision = {min_precision * 1e3} ms.')
+        if verbose:
+            print(f'Precision = {min_precision * 1e3} ms.')
         self.contrasts = None
         self.precision = min_precision
         exponents = dict({1: 9, 0.1: 8, 0.01: 7, 0.001: 6, 0.0001: 5})
@@ -169,8 +171,9 @@ class RealTimeAggregator:
     def __init__(self, history_length):
         self.ts = deque(maxlen=history_length)
 
-    def add(self, value: float, timestamp: int):
+    def add(self, value: float, timestamp: datetime):
         self.ts.append((timestamp, value))
 
     def get(self):
-        return np.vstack(self.ts)
+        xx = np.vstack(self.ts)
+        return pd.Series(data=xx[:, 1], index=xx[:, 0]).sort_index()
