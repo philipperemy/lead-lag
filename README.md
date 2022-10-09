@@ -13,6 +13,8 @@ an explicit rate of convergence governed by the sparsity of the sampling design.
 
 ### API
 
+Compute the lag in seconds between 2 time series in Python.
+
 ```python
 lead_lag.lag(ts1: pd.Series, ts2: pd.Series, max_lag: Union[float, int]) -> Optional[float]
 ```
