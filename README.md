@@ -1,5 +1,7 @@
 ## Lead Lag from non-synchronous data [[paper](https://arxiv.org/abs/1303.4871)]
 
+*Works on Linux, MacOS and Windows (Microsoft Visual C++ 14.0 or greater is required for Windows).*
+
 > We propose a simple continuous time model for modeling the lead-lag effect between two financial
 assets. A two-dimensional process (Xt, Yt) reproduces a lead-lag effect if, for some time shift
 ϑ ∈ R, the process (Xt, Yt+ϑ) is a semi-martingale with respect to a certain filtration. The
