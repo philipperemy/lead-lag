@@ -58,16 +58,16 @@ print('lag=', lag(ts, ts.shift(-9), max_lag=10))
 Follow those steps to install it:
 
 ```bash
-# 1. Recommended for all platforms.
+# 1. Recommended for all platforms. Make sure you have SSH installed. Otherwise use HTTPS.
 pip install git+ssh://git@github.com/philipperemy/lead-lag
 
-# 2. If you have python 3.9 and MacOS. Platform specific.
-pip install lead_lag
-
-# 3. Cloning the repository.
+# 2. Cloning the repository.
 git clone git@github.com:philipperemy/lead-lag.git && cd lead-lag
 virtualenv -p python3 venv && source venv/bin/activate
 make
+
+# 3. If you have python 3.9 and MacOS. Platform specific.
+pip install lead_lag
 ```
 
 ### More Examples
