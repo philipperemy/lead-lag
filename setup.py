@@ -3,7 +3,7 @@ import sys
 
 from setuptools import setup, find_packages
 
-VERSION = '2.2'
+VERSION = '2.3'
 
 # Cython has to be installed before. And I could not find any other ways.
 os.system('pip install cython')
@@ -22,6 +22,7 @@ setup(
     author='Philippe Remy',
     license='Open Source',
     packages=find_packages(),
+    data_files=[('lead_lag', ['lead_lag/lead_lag_impl.pyx'])],
     include_package_data=True,
     install_requires=[
         'pandas>=0.22.0',

@@ -14,7 +14,7 @@ clean:
 	rm -rf *.out lead_lag/*.c *.bin *.exe *.o *.a lead_lag/*.so build *.html __pycache__ lead_lag/__pycache__ notebooks/.ipynb_checkpoints/
 
 deploy:
-	python setup.py sdist bdist_wheel
+	python setup.py sdist
 	pip install twine
 	twine upload dist/*
 
