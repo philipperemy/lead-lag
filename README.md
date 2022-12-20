@@ -59,14 +59,17 @@ Follow those steps to install it:
 
 ```bash
 # 1. Recommended for all platforms. Make sure you have SSH installed. Otherwise use HTTPS.
-pip install git+ssh://git@github.com/philipperemy/lead-lag
+# Via SSH.
+pip install git+ssh://git@github.com/philipperemy/lead-lag 
+# Or via HTTPS.
+pip install git+https://github.com/philipperemy/lead-lag.git
 
 # 2. Cloning the repository.
 git clone git@github.com:philipperemy/lead-lag.git && cd lead-lag
 virtualenv -p python3 venv && source venv/bin/activate
 make
 
-# 3. If you have python 3.9 and MacOS. Platform specific.
+# 3. If you have python 3.9 and MacOS. Platform specific (Not recommended).
 pip install lead_lag
 ```
 
