@@ -1,5 +1,7 @@
 ## Lead Lag from non-synchronous data [[paper](https://arxiv.org/abs/1303.4871)]
 
+*Works on Linux, MacOS and Windows (Microsoft Visual C++ 14.0 or greater is required for Windows).*
+
 > We propose a simple continuous time model for modeling the lead-lag effect between two financial
 assets. A two-dimensional process (Xt, Yt) reproduces a lead-lag effect if, for some time shift
 ϑ ∈ R, the process (Xt, Yt+ϑ) is a semi-martingale with respect to a certain filtration. The
@@ -12,6 +14,8 @@ an explicit rate of convergence governed by the sparsity of the sampling design.
 **O(n.LOG(n))**.
 
 ### API
+
+Compute the lag in seconds between 2 time series in Python.
 
 ```python
 lead_lag.lag(ts1: pd.Series, ts2: pd.Series, max_lag: Union[float, int]) -> Optional[float]
@@ -54,16 +58,16 @@ print('lag=', lag(ts, ts.shift(-9), max_lag=10))
 Follow those steps to install it:
 
 ```bash
-# 1. Recommended for all platforms.
+# 1. Recommended for all platforms. Make sure you have SSH installed. Otherwise use HTTPS.
 pip install git+ssh://git@github.com/philipperemy/lead-lag
 
-# 2. If you have python 3.9 and MacOS. Platform specific.
-pip install lead_lag
-
-# 3. Cloning the repository.
+# 2. Cloning the repository.
 git clone git@github.com:philipperemy/lead-lag.git && cd lead-lag
 virtualenv -p python3 venv && source venv/bin/activate
 make
+
+# 3. If you have python 3.9 and MacOS. Platform specific.
+pip install lead_lag
 ```
 
 ### More Examples
