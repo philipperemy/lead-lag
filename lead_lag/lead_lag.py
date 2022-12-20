@@ -43,7 +43,7 @@ class LeadLag:
         ts1 = ts1[~ts1.index.duplicated(keep='first')]
         ts2 = ts2[~ts2.index.duplicated(keep='first')]
         data_precision = min(
-            min([(ts2.index[i] - ts2.index[i - 1]).total_seconds() for i in range(1, len(ts2))]),
+            min([(ts1.index[i] - ts1.index[i - 1]).total_seconds() for i in range(1, len(ts1))]),
             min([(ts2.index[i] - ts2.index[i - 1]).total_seconds() for i in range(1, len(ts2))])
         )
         if min_precision is None:
