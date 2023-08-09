@@ -2,7 +2,7 @@
 
 *Works on Linux, MacOS and Windows (Microsoft Visual C++ 14.0 or greater is required for Windows).*
 
-> We propose a simple continuous time model for modeling the lead-lag effect between two financial
+> Abstract: We propose a simple continuous time model for modeling the lead-lag effect between two financial
 assets. A two-dimensional process (Xt, Yt) reproduces a lead-lag effect if, for some time shift
 ϑ ∈ R, the process (Xt, Yt+ϑ) is a semi-martingale with respect to a certain filtration. The
 value of the time shift ϑ is the lead-lag parameter. Depending on the underlying filtration,
@@ -15,27 +15,30 @@ an explicit rate of convergence governed by the sparsity of the sampling design.
 
 ### API
 
-Compute the lag in seconds between 2 time series in Python.
+Calculate the time lag (delay) in seconds between two time series in Python using the `lead_lag` module.
 
 ```python
 lead_lag.lag(ts1: pd.Series, ts2: pd.Series, max_lag: Union[float, int]) -> Optional[float]
 ```
 
 #### Arguments
-- `ts1`: a Pandas Series.
-- `ts2`: a Pandas Series.
-- `max_lag`: the maximum lag to find in seconds. `max_lag` will define an interval to search for the best lag in `[max_lag, max_lag]`.
+- `ts1`: This is a Pandas Series containing the first time series data.
+- `ts2`: This is another Pandas Series containing the second time series data.
+- `max_lag`: defines a time interval within which the optimal lag is sought: `[-max_lag, max_lag]`.
 
-*NOTE*: the indexes of `ts1` and `ts2` do not need to match. The non-synchronous data is supported. At the moment, the minimum lag possible is 100 microseconds (for performance reasons).
+It's important to note that the timestamps in the two input series, need not be synchronized. This means that the data points in these series don't have to occur at the exact same times. The module can handle non-synchronous data. However, for efficiency reasons, the smallest achievable lag is set at 100 microseconds.
 
 #### Returns
-The signed estimated `lag` (unit is second). If `lag>0`, `ts1` is the leader. If an error occurs, `None` is returned.
+The signed estimated `lag`, expressed in seconds. 
+- If the calculated lag is positive, it implies that `ts1` leads `ts2`.
+- If the calculated lag is negative, it implies that `ts2` leads `ts1`.
+-  If any issues arise during the calculation, the function returns `None`.
 
 There is also a `lead_lag.LeadLag` object, which offers more features. Refer to the examples to learn how to use it.
 
 ### Example
 
-Here is how the library works on the simplest example:
+Here's how the library operates using the simplest example:
 
 ```python
 from datetime import datetime, timedelta
@@ -75,9 +78,10 @@ make
 
 ### More Examples
 
-Browse the [examples](examples) directory to learn more about the lib:
-- FTX vs Bitmex lead lag: FTX is leading Bitmex and the lag is 90ms on 2022-09-27.
-- Bitflyer vs Btcbox lead lag: Bitflyer is leading Btcbox and the lag is 15s in 2018.
+You can gain further insight into the library's functionality by exploring the contents of the [examples](examples) directory. In particular:
+
+- There's an example titled "FTX vs Bitmex lead lag," which examines the relationship between FTX and Bitmex exchanges. In this case, FTX leads Bitmex, and the calculated lag amounts to 90 milliseconds. This observation is based on data from September 27th, 2022.
+- Another example named "Bitflyer vs Btcbox lead lag" investigates the lead-lag dynamics between Bitflyer and Btcbox exchanges. The findings suggest that Bitflyer leads Btcbox, and the computed lag stands at 15 seconds. The data for this comparison pertains to the year 2018.
 
 You can also run the Jupyter Notebook [lead_lag_example_2.ipynb](notebooks/lead_lag_example_2.ipynb):
 
