@@ -1,4 +1,4 @@
-## Lead Lag from non-synchronous data [[paper](https://arxiv.org/abs/1303.4871)]
+## Estimation of the lead-lag parameter from non-synchronous data [[paper](https://arxiv.org/abs/1303.4871)]
 
 *Works on Linux, MacOS and Windows (Microsoft Visual C++ 14.0 or greater is required for Windows).*
 
