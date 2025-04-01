@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "lead-lag"
+version = "0.1.0"
+description = ""
+authors = ["tvb <tvb@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pandas = "^2.1.4"
+numpy = "^1.26.3"
+tqdm = "^4.66.1"
+matplotlib = "^3.8.2"
+cython = "^3.0.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
